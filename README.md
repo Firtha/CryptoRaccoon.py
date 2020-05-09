@@ -1,4 +1,4 @@
-# Python_CryptoRacoon
+# CryptoRaccoon.py
 
 ![preview](/img/readme.png)
 
