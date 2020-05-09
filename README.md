@@ -1,6 +1,6 @@
 # CryptoRaccoon.py
 
-![preview](/img/readme.png)
+![preview](/img/new_readme.png)
 
 ## Project description
 Create a mario-like game in Python with pygame.
