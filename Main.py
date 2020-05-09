@@ -18,7 +18,7 @@ try:
 	fenetre.blit(perso, (200, 300))
 
 	#Rafraîchissement de l'écran
-	pygame.display.set_caption("Crypto Racoon")
+	pygame.display.set_caption("Crypto Raccoon")
 	pygame.display.flip()
 
 	# BOUCLE INFINIE
