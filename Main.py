@@ -6,14 +6,14 @@ pygame.init()
 
 try:
 	#Ouverture de la fenêtre Pygame
-	fenetre = pygame.display.set_mode((1400, 800))
+	fenetre = pygame.display.set_mode((859, 1002))
 
 	#Chargement et collage du fond
-	fond = pygame.image.load("images/platresDouble.jpg").convert()
+	fond = pygame.image.load("img/background.jpg").convert()
 	fenetre.blit(fond, (0, 0))
 
 	#Chargement et collage du personnage
-	perso = pygame.image.load("images/tribalSunshine.png").convert_alpha()
+	perso = pygame.image.load("img/raccoon.png").convert_alpha()
 	position_perso = perso.get_rect()
 	fenetre.blit(perso, (200, 300))
 
