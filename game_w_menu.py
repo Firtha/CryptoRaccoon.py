@@ -35,21 +35,32 @@ def main_menu():
         button_1.centerx = screen_rect.centerx              #The button x-center value is set to be equal to the screen x-center value
         button_2 = pygame.Rect(250, 400, 400, 100)          #Init button_2 rectangleparameters -> Rect(left, top, width, height)
         button_2.centerx = screen_rect.centerx              #The button x-center value is set to be equal to the screen x-center value
+        
         if button_1.collidepoint((mx, my)):
             if click:
-                print("button clicked")
+                print("Start button clicked")
                 running = False
                 game()
+        if button_2.collidepoint((mx, my)):
+            if click:
+                print("Stats button clicked")
+                running = False
+                main_menu()
 
         pygame.draw.rect(screen, (255, 255, 255), button_1) #Draw the menubutton_1
-        pygame.draw.rect(screen, (255, 0, 0), button_2)     #Draw the menubutton_2
-       
+        pygame.draw.rect(screen, (255, 255, 255), button_2)     #Draw the menubutton_2
+        
+        draw_text('START', font, (0, 0, 0), screen, 300, 227, True) 
+        draw_text('STATS', font, (0, 0, 0), screen, 300, 427, True) 
+
         #Event loop that will check if any input event occurs
         for event in pygame.event.get():            
             if event.type == QUIT:
                 running = False
+                sys.exit()
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
+                    print("escape has been pushed")
                     pygame.quit()
                     sys.exit()
             if event.type == MOUSEBUTTONDOWN:
