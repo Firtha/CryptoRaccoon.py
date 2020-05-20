@@ -1,0 +1,17 @@
+{
+    "players" : {
+        "user_1" : {
+            "score" : 200,
+            "level_max" : 1 
+        },
+        "user_2" : {
+            "score" : 450,
+            "level_max" : 3 
+        },
+        "user_3" : {
+            "score" : 280,
+            "level_max" : 2 
+        }
+    }
+
+}
