@@ -5,6 +5,11 @@ import game
 import utils
 
 
+# Authenticate_user : Ask for an username
+def authenticate_user():
+    print("Ask for an username")
+
+
 # Main_menu : create the menu window
 def main_menu(pygame, font, screen, screen_rect):
     click = False
@@ -54,3 +59,13 @@ def main_menu(pygame, font, screen, screen_rect):
                 main_menu(pygame, font, screen, screen_rect)
 
         pygame.display.flip()  # Refresh screen
+
+
+# Stats_listing : Create the best scores list window
+def stats_listing():
+    print("Stats list incoming")
+
+
+# Saves_listing : Create the user saves (unfinished games only) list window
+def saves_listing():
+    print("User saves list incoming")

@@ -2,6 +2,7 @@ import pygame
 import sys
 import main_menu
 
+
 pygame.init()
 
 # Init some basic parameters for the game (Screen size, font, icon, name)
