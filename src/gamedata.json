@@ -1,0 +1,20 @@
+{
+    "game": "crypto raccoon",
+    "players": [
+        {
+            "name": "Shooterz",
+            "score": 600,
+            "level_max": 4
+        },
+        {
+            "name": "Anthony",
+            "score": 440,
+            "level_max": 3
+        },
+        {
+            "name": "patator",
+            "score": 11000,
+            "level_max": 2
+        }
+    ]
+}
