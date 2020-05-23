@@ -1,11 +1,6 @@
 import sys
-
 from pygame.constants import *
-
-# Initialisation du background
-def init_game_background(pygame, screen):
-    fond = pygame.image.load("img/background.jpg").convert()
-    screen.blit(fond, (0, 0))
+import utils
 
 
 # define the player persona position
@@ -14,7 +9,7 @@ def raccoon_player(x, y, pygame, screen):
     screen.blit(raccoon, (x, y))
 
 
-def game(pygame, screen):
+def game(pygame, font, screen, screen_rect):
     # init player position in the screen and the image
     raccoon_Xpos = 0
     raccoon_Ypos = 880
@@ -33,7 +28,9 @@ def game(pygame, screen):
 
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
-                    running = False
+                    if not game_menu(pygame, font, screen, screen_rect):
+                        print("Saving the game should occur now !")
+                        running = False
                 if event.key == K_DOWN:
                     raccoon_new_Ypos = 80
                     raccoon_Ypos += raccoon_new_Ypos
@@ -46,15 +43,12 @@ def game(pygame, screen):
                 if event.key == K_LEFT:
                     raccoon_new_Xpos = -75
                     raccoon_Xpos += raccoon_new_Xpos
-                if event.key == K_m:
-                    running = False
-                    main_menu(pygame, font, screen, screen_rect)
 
             # if event.type == MOUSEBUTTONDOWN and event.button == 3 and event.pos[1] < 100:
             #    print("Zone dangereuse")
 
         # put your game code below :
-        init_game_background(pygame, screen)
+        utils.init_game_background(pygame, screen)
 
         # check raccon's position on the screen
         if raccoon_Xpos <= 0:
@@ -69,3 +63,50 @@ def game(pygame, screen):
 
         raccoon_player(raccoon_Xpos, raccoon_Ypos, pygame, screen)
         pygame.display.flip()
+
+
+def game_menu(pygame, font, screen, screen_rect):
+    click = False
+    running = True
+    while running:
+        # Define mouse click to false
+        mx, my = pygame.mouse.get_pos()  # Init mouse cursor position for the menu
+        utils.init_game_background(pygame, screen)  # Start the init_game_background function
+        utils.draw_text('PAUSE', font, (255, 255, 255),
+                        screen, 300, 50, True)  # Draw the text menu
+        button_1 = pygame.Rect(250, 200, 400,
+                               100)  # Init button_1 rectangleparameters -> Rect(left, top, width, height)
+        button_1.centerx = screen_rect.centerx  # The button x-center value is set to be equal to the screen x-center value
+        button_2 = pygame.Rect(250, 400, 400,
+                               100)  # Init button_2 rectangleparameters -> Rect(left, top, width, height)
+        button_2.centerx = screen_rect.centerx  # The button x-center value is set to be equal to the screen x-center value
+
+        pygame.draw.rect(screen, (255, 255, 255), button_1)  # Draw the menubutton_1
+        pygame.draw.rect(screen, (255, 255, 255), button_2)  # Draw the menubutton_2
+
+        utils.draw_text('RESUME', font, (0, 0, 0), screen, 300, 227, True)
+        utils.draw_text('SAVE AND QUIT', font, (0, 0, 0), screen, 300, 427, True)
+
+        # Event loop that will check if any input event occurs
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    print("Escape has been pushed -> RESUME")
+                    return True
+            if event.type == MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    click = True
+
+        if button_1.collidepoint((mx, my)):
+            if click:
+                print("RESUME button clicked")
+                return True
+        if button_2.collidepoint((mx, my)):
+            if click:
+                print("SAVE&QUIT button clicked")
+                return False
+
+        pygame.display.flip()  # Refresh screen
