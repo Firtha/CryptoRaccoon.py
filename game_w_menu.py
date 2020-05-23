@@ -38,11 +38,12 @@ def main_menu():
         
         if button_1.collidepoint((mx, my)):
             if click:
+                click = False
                 print("Start button clicked")
-                running = False
                 game()
         if button_2.collidepoint((mx, my)):
             if click:
+                click = False
                 print("Stats button clicked")
                 running = False
                 main_menu()
@@ -98,6 +99,8 @@ def game():
                 running = False
 
             if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    running = False
                 if event.key == K_DOWN :
                     raccoon_new_Ypos = 80
                     raccoon_Ypos += raccoon_new_Ypos
@@ -135,6 +138,8 @@ def game():
         raccoon_player(raccoon_Xpos, raccoon_Ypos)
         pygame.display.flip()
 
+def game_menu():
+    
 
 main_menu()
     
