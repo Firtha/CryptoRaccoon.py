@@ -9,6 +9,30 @@ def getSavedGames():
         return data
 
 
+def getBestScores():
+    print("Hello getBestScores")
+    with open('Saves/saves.json') as json_file:
+        data = json.load(json_file)
+        savedGames = []
+        for player in data['players']:
+            for save in player['saves']:
+                savedGame = [player['name'], save['score']]
+                savedGames.append(savedGame)
+
+    for x in range(len(savedGames)-1):
+        for y in range(x+1,len(savedGames)):
+            if float(savedGames[x][1]) < float(savedGames[y][1]):
+                tmp = savedGames[x]
+                savedGames[x] = savedGames[y]
+                savedGames[y] = tmp
+
+    for savedGame in savedGames:
+        print(savedGame[0], " -> ", savedGame[1])
+
+    return savedGames
+
+
+
 def getNextId(userName):
     print("Hello getNextId")
     with open('Saves/saves.json') as json_file:

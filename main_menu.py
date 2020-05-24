@@ -144,7 +144,9 @@ def stats_listing(pygame, font, screen, screen_rect, userName):
     color = (255, 255, 255)
     active = False
     done = False
-    data = data_collector.get_file('src/scoreboard.json') 
+    data = data_collector.get_file('src/scoreboard.json')
+
+    saves_manager.getBestScores()
 
     ######################################### start : graphic layout for the scoreboard
     list_line_pos = [200, 290, 380, 470, 560]
