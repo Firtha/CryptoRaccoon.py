@@ -13,6 +13,12 @@ def get_file_data():
         json_data = json.load(json_file)
         json_file.close()
         return json_data
+        
+def get_file(path):
+    with open(path) as json_file:
+        json_data = json.load(json_file)
+        json_file.close()
+        return json_data
 
 # Name: print_json_formatted
 # For : 
@@ -146,7 +152,8 @@ def main():
 
     print(read_json('src/gamedata.json'))
     
-    print(is_valid_username("patator"))
+    if get_username_pos("patator") != None :
+       print("valid username")
     
     update_username("Kahoot", "patator")
 
