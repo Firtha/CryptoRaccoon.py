@@ -5,8 +5,8 @@ import game
 import utils
 
 
-def authenticate(pygame, font, screen, screen_rect):
-
+# Authenticate_user : Ask for an username and returns it to Main.py
+def authenticate_user(pygame, font, screen, screen_rect):
     color_inactive = pygame.Color('lightskyblue3')
     color_active = pygame.Color('dodgerblue2')
     color = color_inactive
@@ -63,20 +63,16 @@ def authenticate(pygame, font, screen, screen_rect):
 
         txt_surface = font.render(text, True, color)
         # Resize the box if the text is too long.
-        width = max(400, txt_surface.get_width()+10)
+        width = max(400, txt_surface.get_width() + 10)
         input_box.w = width
         # Blit the text.
-        screen.blit(txt_surface, (input_box.x+5, input_box.y+5))
+        screen.blit(txt_surface, (input_box.x + 5, input_box.y + 5))
         # Blit the input_box rect.
         pygame.draw.rect(screen, color, input_box, 2)
 
         pygame.display.flip()
 
     return text
-
-# Authenticate_user : Ask for an username
-def authenticate_user():
-    print("Ask for an username")
 
 
 # Main_menu : create the menu window

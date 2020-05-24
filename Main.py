@@ -13,7 +13,7 @@ screen = pygame.display.set_mode((859, 1002))               #Define screen size
 screen_rect = screen.get_rect()                             #Get screen size as a rectangle, allow us to center other rectangle elements based on the screen size
 font = pygame.font.SysFont(None, 72)                        #Define the game font
 
-userName = main_menu.authenticate(pygame, font, screen, screen_rect)
+userName = main_menu.authenticate_user(pygame, font, screen, screen_rect)
 print(userName)
 main_menu.main_menu(pygame, font, screen, screen_rect)
 pygame.quit()
