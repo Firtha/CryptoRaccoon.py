@@ -5,6 +5,62 @@ import game
 import utils
 
 
+def authenticate(pygame, font, screen, screen_rect):
+
+    color_inactive = pygame.Color('lightskyblue3')
+    color_active = pygame.Color('dodgerblue2')
+    color = color_inactive
+    active = False
+    text = ''
+    done = False
+
+    while not done:
+        utils.init_game_background(pygame, screen)  # Start the init_game_background function
+        utils.draw_text('WHO ARE YOU', font, (255, 255, 255),
+                        screen, 300, 50, True)  # Draw the text menu
+        input_box = pygame.Rect(250, 200, 400,
+                                100)  # Init button_1 rectangleparameters -> Rect(left, top, width, height)
+        input_box.centerx = screen_rect.centerx  # The button x-center value is set to be equal to the screen x-center value
+
+        pygame.draw.rect(screen, (255, 255, 255), input_box)  # Draw the menubutton_1
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                # If the user clicked on the input_box rect.
+                if input_box.collidepoint(event.pos):
+                    # Toggle the active variable.
+                    active = not active
+                else:
+                    active = False
+                # Change the current color of the input box.
+                color = color_active if active else color_inactive
+            if event.type == pygame.KEYDOWN:
+                if active:
+                    if event.key == pygame.K_RETURN:
+                        print(text)
+                        text = ''
+                        done = True
+                    elif event.key == pygame.K_BACKSPACE:
+                        text = text[:-1]
+                    else:
+                        text += event.unicode
+
+        txt_surface = font.render(text, True, color)
+        # Resize the box if the text is too long.
+        width = max(400, txt_surface.get_width()+10)
+        input_box.w = width
+        # Blit the text.
+        screen.blit(txt_surface, (input_box.x+5, input_box.y+5))
+        # Blit the input_box rect.
+        pygame.draw.rect(screen, color, input_box, 2)
+
+        pygame.display.flip()
+
+    return text
+
 # Authenticate_user : Ask for an username
 def authenticate_user():
     print("Ask for an username")
