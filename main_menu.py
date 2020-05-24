@@ -190,7 +190,7 @@ def saves_listing(pygame, font, screen, screen_rect, userName):
     data = saves_manager.getSavedGames()
     for p in data['saved-games']:
         if p['userName'] == userName:
-            print('SaveID: ' + p['saveId'])
+            print('SaveID: ', p['saveId'])
             print('Name: ' + p['userName'])
             print('Score: ' + p['userScore'])
             print('')
