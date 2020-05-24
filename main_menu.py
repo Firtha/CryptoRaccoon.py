@@ -11,19 +11,26 @@ def authenticate(pygame, font, screen, screen_rect):
     color_active = pygame.Color('dodgerblue2')
     color = color_inactive
     active = False
+    click = False
     text = ''
     done = False
+    font_s = pygame.font.SysFont(None, 48)                        #Define the game font
+
 
     while not done:
-        utils.init_game_background(pygame, screen)  # Start the init_game_background function
-        utils.draw_text('WHO ARE YOU', font, (255, 255, 255),
-                        screen, 300, 50, True)  # Draw the text menu
-        input_box = pygame.Rect(250, 200, 400,
-                                100)  # Init button_1 rectangleparameters -> Rect(left, top, width, height)
-        input_box.centerx = screen_rect.centerx  # The button x-center value is set to be equal to the screen x-center value
+        mx, my = pygame.mouse.get_pos() 
+        utils.init_game_background(pygame, screen)              # Start the init_game_background function
+        utils.draw_text('WHO ARE YOU ?', font, (255, 255, 255),
+                        screen, 300, 350, True)                  # Draw the text menu
+        input_box = pygame.Rect(250, 410, 400, 80)             # Init button_1 rectangleparameters -> Rect(left, top, width, height)
+        input_box.centerx = screen_rect.centerx                 # The button x-center value is set to be equal to the screen x-center value
 
-        pygame.draw.rect(screen, (255, 255, 255), input_box)  # Draw the menubutton_1
+        validate_button = pygame.Rect(250, 510, 200, 40)
+        validate_button.centerx = screen_rect.centerx          
 
+        pygame.draw.rect(screen, (255, 255, 255), input_box)    # Draw the menubutton_1
+        pygame.draw.rect(screen, (255, 255, 255), validate_button)    # Draw the menubutton_1
+        utils.draw_text('validate', font_s, (0, 0, 0), screen, 300, 515, True)  
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -35,6 +42,10 @@ def authenticate(pygame, font, screen, screen_rect):
                     active = not active
                 else:
                     active = False
+                if validate_button.collidepoint((mx, my)):
+                    print("button validate clicked")
+                    done = True
+
                 # Change the current color of the input box.
                 color = color_active if active else color_inactive
             if event.type == pygame.KEYDOWN:
@@ -47,6 +58,8 @@ def authenticate(pygame, font, screen, screen_rect):
                         text = text[:-1]
                     else:
                         text += event.unicode
+        
+
 
         txt_surface = font.render(text, True, color)
         # Resize the box if the text is too long.
@@ -112,14 +125,62 @@ def main_menu(pygame, font, screen, screen_rect):
                 click = False
                 print("Stats button clicked")
                 running = False
-                main_menu(pygame, font, screen, screen_rect)
+                stats_listing(pygame, font, screen, screen_rect)
 
         pygame.display.flip()  # Refresh screen
 
 
 # Stats_listing : Create the best scores list window
-def stats_listing():
+def stats_listing(pygame, font, screen, screen_rect):
     print("Stats list incoming")
+    click = False
+    running = True
+    while running:
+        # Define mouse click to false
+        mx, my = pygame.mouse.get_pos()  # Init mouse cursor position for the menu
+        utils.init_game_background(pygame, screen)  # Start the init_game_background function
+        utils.draw_text('MENU', font, (255, 255, 255),
+                  screen, 300, 50, True)  # Draw the text menu
+        button_1 = pygame.Rect(250, 200, 400,
+                               100)  # Init button_1 rectangleparameters -> Rect(left, top, width, height)
+        button_1.centerx = screen_rect.centerx  # The button x-center value is set to be equal to the screen x-center value
+        button_2 = pygame.Rect(250, 400, 400,
+                               100)  # Init button_2 rectangleparameters -> Rect(left, top, width, height)
+        button_2.centerx = screen_rect.centerx  # The button x-center value is set to be equal to the screen x-center value
+
+        pygame.draw.rect(screen, (255, 255, 255), button_1)  # Draw the menubutton_1
+        pygame.draw.rect(screen, (255, 255, 255), button_2)  # Draw the menubutton_2
+
+        utils.draw_text('START', font, (0, 0, 0), screen, 300, 227, True)
+        utils.draw_text('STATS', font, (0, 0, 0), screen, 300, 427, True)
+
+        # Event loop that will check if any input event occurs
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    print("Escape has been pushed")
+                    running = False
+            if event.type == MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    click = True
+
+        if button_1.collidepoint((mx, my)):
+            if click:
+                click = False
+                print("Start button clicked")
+                game.game(pygame, font, screen, screen_rect)
+        if button_2.collidepoint((mx, my)):
+            if click:
+                click = False
+                print("Stats button clicked")
+                running = False
+                stats_listing(pygame, font, screen, screen_rect)
+
+        pygame.display.flip()  # Refresh screen
+
 
 
 # Saves_listing : Create the user saves (unfinished games only) list window
