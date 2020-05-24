@@ -19,9 +19,9 @@ def game(pygame, font, screen, screen_rect, userName, saveId):
 
     # If saveId = -1 then it means it's a new game
     if saveId == -1:
-        saveId = saves_manager.getNextId()
+        saveId = saves_manager.getNextId(userName)
 
-    print("Game ID is %d", saveId)
+    print("Game ID is ", saveId)
 
     fontScore = pygame.font.SysFont(None, 24)
     userScore = 0.0

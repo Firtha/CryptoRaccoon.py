@@ -188,9 +188,11 @@ def stats_listing(pygame, font, screen, screen_rect, userName):
 def saves_listing(pygame, font, screen, screen_rect, userName):
     print("User saves list incoming")
     data = saves_manager.getSavedGames()
-    for p in data['saved-games']:
-        if p['userName'] == userName:
-            print('SaveID: ', p['saveId'])
-            print('Name: ' + p['userName'])
-            print('Score: ' + p['userScore'])
-            print('')
+    for player in data['players']:
+        print('Name: ', player['name'])
+        if player['name'] == userName:
+            for save in player['saves']:
+                print('ID: ', save['id'])
+                print('Date: ' + save['date'])
+                print('Score: ' + save['score'])
+                print('')
