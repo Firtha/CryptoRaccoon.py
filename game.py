@@ -1,6 +1,7 @@
 import sys
 from pygame.constants import *
 import utils
+import saves_manager
 
 
 # define the player persona position
@@ -9,12 +10,21 @@ def raccoon_player(x, y, pygame, screen):
     screen.blit(raccoon, (x, y))
 
 
-def game(pygame, font, screen, screen_rect):
+def game(pygame, font, screen, screen_rect, userName, saveId):
     # init player position in the screen and the image
     raccoon_Xpos = 0
     raccoon_Ypos = 880
     raccoon_new_Xpos = 0
     raccoon_new_Ypos = 0
+
+    # If saveId = -1 then it means it's a new game
+    if saveId == -1:
+        saveId = saves_manager.getNextId()
+
+    print("Game ID is %d", saveId)
+
+    fontScore = pygame.font.SysFont(None, 24)
+    userScore = 0.0
 
     pygame.display.flip()
     # BOUCLE INFINIE
@@ -28,8 +38,8 @@ def game(pygame, font, screen, screen_rect):
 
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
-                    if not game_menu(pygame, font, screen, screen_rect):
-                        print("Saving the game should occur now !")
+                    if not game_menu(pygame, font, screen, screen_rect, userName):
+                        saves_manager.putSavedGame(userName, userScore, saveId)
                         running = False
                 if event.key == K_DOWN:
                     raccoon_new_Ypos = 80
@@ -50,6 +60,17 @@ def game(pygame, font, screen, screen_rect):
         # put your game code below :
         utils.init_game_background(pygame, screen)
 
+        utils.draw_text('User : ' + userName, fontScore, (0, 0, 0),
+                        screen, 15, 10, False)  # Draw the user name
+
+        utils.draw_text('Score (BTC) :', fontScore, (0, 0, 0),
+                        screen, 15, 30, False)  # Draw the score declaration
+
+        utils.draw_text('%.4f' % userScore, fontScore, (0, 0, 0),
+                        screen, 30, 45, False)  # Draw the score
+
+        userScore += 0.00001
+
         # check raccon's position on the screen
         if raccoon_Xpos <= 0:
             raccoon_Xpos = 0
@@ -65,7 +86,7 @@ def game(pygame, font, screen, screen_rect):
         pygame.display.flip()
 
 
-def game_menu(pygame, font, screen, screen_rect):
+def game_menu(pygame, font, screen, screen_rect, userName):
     click = False
     running = True
     while running:

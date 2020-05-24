@@ -15,6 +15,6 @@ font = pygame.font.SysFont(None, 72)                        #Define the game fon
 
 userName = main_menu.authenticate_user(pygame, font, screen, screen_rect)
 print(userName)
-main_menu.main_menu(pygame, font, screen, screen_rect)
+main_menu.main_menu(pygame, font, screen, screen_rect, userName)
 pygame.quit()
 sys.exit()
