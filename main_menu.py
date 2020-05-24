@@ -3,6 +3,7 @@ import sys
 from pygame.constants import *
 import game
 import utils
+import data_collector
 
 
 # Authenticate_user : Ask for an username and returns it to Main.py
@@ -28,7 +29,7 @@ def authenticate_user(pygame, font, screen, screen_rect):
         validate_button = pygame.Rect(250, 510, 200, 40)
         validate_button.centerx = screen_rect.centerx          
 
-        pygame.draw.rect(screen, (255, 255, 255), input_box)    # Draw the menubutton_1
+        pygame.draw.rect(screen, color, input_box)    # Draw the menubutton_1
         pygame.draw.rect(screen, (255, 255, 255), validate_button)    # Draw the menubutton_1
         utils.draw_text('validate', font_s, (0, 0, 0), screen, 300, 515, True)  
         for event in pygame.event.get():
@@ -61,12 +62,12 @@ def authenticate_user(pygame, font, screen, screen_rect):
         
 
 
-        txt_surface = font.render(text, True, color)
+        txt_surface = font.render(text, True, (0, 0, 0))
         # Resize the box if the text is too long.
         width = max(400, txt_surface.get_width() + 10)
         input_box.w = width
         # Blit the text.
-        screen.blit(txt_surface, (input_box.x + 5, input_box.y + 5))
+        screen.blit(txt_surface, (input_box.x + 5, input_box.y + 20))
         # Blit the input_box rect.
         pygame.draw.rect(screen, color, input_box, 2)
 
@@ -126,56 +127,47 @@ def main_menu(pygame, font, screen, screen_rect):
         pygame.display.flip()  # Refresh screen
 
 
+
 # Stats_listing : Create the best scores list window
 def stats_listing(pygame, font, screen, screen_rect):
     print("Stats list incoming")
-    click = False
-    running = True
-    while running:
-        # Define mouse click to false
-        mx, my = pygame.mouse.get_pos()  # Init mouse cursor position for the menu
-        utils.init_game_background(pygame, screen)  # Start the init_game_background function
-        utils.draw_text('MENU', font, (255, 255, 255),
-                  screen, 300, 50, True)  # Draw the text menu
-        button_1 = pygame.Rect(250, 200, 400,
-                               100)  # Init button_1 rectangleparameters -> Rect(left, top, width, height)
-        button_1.centerx = screen_rect.centerx  # The button x-center value is set to be equal to the screen x-center value
-        button_2 = pygame.Rect(250, 400, 400,
-                               100)  # Init button_2 rectangleparameters -> Rect(left, top, width, height)
-        button_2.centerx = screen_rect.centerx  # The button x-center value is set to be equal to the screen x-center value
+    color = (255, 255, 255)
+    active = False
+    done = False
+    data = data_collector.get_file('src/scoreboard.json') 
 
-        pygame.draw.rect(screen, (255, 255, 255), button_1)  # Draw the menubutton_1
-        pygame.draw.rect(screen, (255, 255, 255), button_2)  # Draw the menubutton_2
+    ######################################### start : graphic layout for the scoreboard
+    list_line_pos = [200, 290, 380, 470, 560]
+ 
+    while not done:
+        mx, my = pygame.mouse.get_pos() 
+        utils.init_game_background(pygame, screen)              # Start the init_game_background function
+        utils.draw_text('Scoreboard', font, (255, 255, 255), screen, 300, 50, True)                  # Draw the text menu
 
-        utils.draw_text('START', font, (0, 0, 0), screen, 300, 227, True)
-        utils.draw_text('STATS', font, (0, 0, 0), screen, 300, 427, True)
+        top_rectangle = 200
+        top_text_pos = 205
 
-        # Event loop that will check if any input event occurs
+        for i in list_line_pos:
+            pygame.draw.rect(screen, color, pygame.Rect(179, i, 500, 80))
+            top_rectangle += 90
+
+        for v in data['bestplayers']:
+            user_stat = v['name'] + " " + str(v['score'])
+            utils.draw_text(user_stat, font, (0, 0, 0), screen, 300, top_text_pos, True)
+            top_text_pos += 90
+
         for event in pygame.event.get():
-            if event.type == QUIT:
+            if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
-                    print("Escape has been pushed")
-                    running = False
-            if event.type == MOUSEBUTTONDOWN:
-                if event.button == 1:
-                    click = True
 
-        if button_1.collidepoint((mx, my)):
-            if click:
-                click = False
-                print("Start button clicked")
-                game.game(pygame, font, screen, screen_rect)
-        if button_2.collidepoint((mx, my)):
-            if click:
-                click = False
-                print("Stats button clicked")
-                running = False
-                stats_listing(pygame, font, screen, screen_rect)
+            if event.type == pygame.KEYDOWN:
+                if active:
+                    if event.key == pygame.K_RETURN:
+                        print("enter")
 
-        pygame.display.flip()  # Refresh screen
+        pygame.display.flip()
+
 
 
 
