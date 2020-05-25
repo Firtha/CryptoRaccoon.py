@@ -18,7 +18,7 @@ def getUserUnfinishedGames(userName):
         if player['name'] == userName:
             for save in player['saves']:
                 if not save['game_over']:
-                    userData = [str(save['id']), save['date'], save['score']]
+                    userData = [str(save['id']), save['date'], save['score'], str(save['lives'])]
                     userDatas.append(userData)
     return userDatas
 
@@ -58,7 +58,7 @@ def getLastSave(userName):
             for save in player['saves']:
                 if not save['game_over']:
                     if int(save['id']) == lastId:
-                        return [save['id'], save['date'], save['score']]
+                        return [save['id'], save['date'], save['score'], save['lives']]
     if lastDate == 0:
         return -1
 
@@ -125,7 +125,7 @@ def deleteSavedGame(userName, saveId):
 
 
 # Rewrite the saves file with the current game (edit or append, user and save or save only if existing user)
-def putSavedGame(userName, userScore, saveId):
+def putSavedGame(userName, userScore, saveId, userLife):
     print("Hello putSavedGame")
     data = getSavedGames()
     saveExist = False
@@ -139,6 +139,7 @@ def putSavedGame(userName, userScore, saveId):
                     saveExist = True
                     save['score'] = '%.4f' % userScore
                     save['date'] = datetime.today().strftime('%Y-%m-%d-%H:%M:%S')
+                    save['lives'] = userLife
 
     # If we need to create a new saved game
     if not saveExist:
@@ -153,6 +154,7 @@ def putSavedGame(userName, userScore, saveId):
                     'id': saveId,
                     'date': datetime.today().strftime('%Y-%m-%d-%H:%M:%S'),
                     'score': '%.4f' % userScore,
+                    'lives': userLife,
                     'game_over': False
                 })
 

@@ -35,8 +35,13 @@ def game(pygame, font, screen, screen_rect, userName, saveId, gameData):
     if saveId == -1:
         saveId = saves_manager.getNextId(userName)
         userScore = 0.0
+        userLife = 0
     else:
         userScore = float(gameData[2])
+        userLife = int(gameData[3])
+
+    heartLives = pygame.image.load("../img/heart.png").convert_alpha()
+    heartLives = pygame.transform.scale(heartLives, (60, 60))
 
 
     print("Game ID is ", saveId)
@@ -58,7 +63,7 @@ def game(pygame, font, screen, screen_rect, userName, saveId, gameData):
                 if event.key == K_ESCAPE:
                     targetOptions = game_menu(pygame, font, screen, screen_rect, userName)
                     if targetOptions == 1:
-                        saves_manager.putSavedGame(userName, userScore, saveId)
+                        saves_manager.putSavedGame(userName, userScore, saveId, userLife)
                     if targetOptions == 1 or targetOptions == -1:
                         running = False
 
@@ -123,6 +128,9 @@ def game(pygame, font, screen, screen_rect, userName, saveId, gameData):
 
         utils.draw_text('%.4f' % userScore, fontScore, (0, 0, 0),
                         screen, 30, 45, False)  # Draw the score
+
+        for x in range(userLife):
+            screen.blit(heartLives, (200 + 70 * x, 10))
 
         userScore += 0.00001
 
