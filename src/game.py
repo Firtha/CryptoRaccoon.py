@@ -8,24 +8,30 @@ from truck import Truck
 # class qui représente le jeu
 class Game:
     def __init__(self):
-        self.player = Player()
+        self.all_players = pygame.sprite.Group()
+        self.player = Player(self)
+        self.all_players.add(self.player)
         self.all_trucks = pygame.sprite.Group()
         self.pressed = {}
         self.spawn_truck()
-        
-    
+           
     def spawn_truck(self):
-        truck = Truck()
+        truck = Truck(self)
         self.all_trucks.add(truck)
+    
+    def check_collision(self, sprite, group):
+        return pygame.sprite.spritecollide(sprite, group, False, pygame.sprite.collide_mask)
 
 # class du joueur
 class Player(pygame.sprite.Sprite):
 
-    def __init__(self):
+    def __init__(self, game):
         super().__init__()
+        self.game = game
         self.health = 100
         self.max_health = 100
         self.velocity = 20
+        self.jump_velocity = 40
         self.image = pygame.image.load("../img/raccoon.png").convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.x = 50
@@ -33,13 +39,16 @@ class Player(pygame.sprite.Sprite):
         self.max_y = 720
     
     def move_right(self):
-        self.rect.x += self.velocity
+        if not self.game.check_collision(self, self.game.all_trucks):
+            self.rect.x += self.velocity
 
     def move_left(self):
         self.rect.x -= self.velocity
     
     def jump(self):
-        self.rect.y -= self.velocity
+        if not self.game.check_collision(self, self.game.all_trucks):
+            self.rect.y -= self.jump_velocity
+
 
 
 def game(pygame, font, screen, screen_rect, userName, saveId, gameData):
@@ -97,12 +106,15 @@ def game(pygame, font, screen, screen_rect, userName, saveId, gameData):
         screen.blit(game.player.image, game.player.rect)
 
         # draw players stats
-        utils.draw_text('User : ' + userName, fontScore, (0, 0, 0), screen, 15, 10, False)  # Draw the user name
-        utils.draw_text('Score (BTC) :', fontScore, (0, 0, 0), screen, 15, 30, False)  # Draw the score declaration
-        utils.draw_text('%.4f' % userScore, fontScore, (0, 0, 0), screen, 30, 45, False)  # Draw the score
-        
+        utils.draw_text('User : ' + userName, fontScore, (255, 255, 255), screen, 15, 10, False)  # Draw the user name
+        utils.draw_text('Score (BTC) : %.4f' % userScore, fontScore, (255, 255, 255), screen, 15, 30, False)  # Draw the score declaration
+        utils.draw_text('Life : %d' % game.player.health, font, (255, 255, 255), screen, 625, 10, False)  # Draw the score
+
         #draw trucks
         game.all_trucks.draw(screen)
+
+        if game.check_collision(game.player, game.all_trucks):
+            game.player.health -=25
 
         userScore += 0.00001
         pygame.display.flip()
@@ -138,14 +150,14 @@ def game_menu(pygame, font, screen, screen_rect, userName):
 
         # Event loop that will check if any input event occurs
         for event in pygame.event.get():
-            if event.type == QUIT:
+            if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
                     print("Escape has been pushed -> RESUME")
                     return 0
-            if event.type == MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
                     click = True
 
