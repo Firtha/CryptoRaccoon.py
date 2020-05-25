@@ -116,6 +116,7 @@ def putSavedGame(userName, userScore, saveId):
                 if save['id'] == int(saveId):
                     saveExist = True
                     save['score'] = '%.4f' % userScore
+                    save['date'] = datetime.today().strftime('%Y-%m-%d-%H:%M:%S')
 
     # If we need to create a new saved game
     if not saveExist:
