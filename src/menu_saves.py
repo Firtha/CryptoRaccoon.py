@@ -17,6 +17,7 @@ def saves_listing(pygame, font, screen, screen_rect, userName):
         utils.init_game_background(pygame, screen)                                          # Start the init_game_background function
         utils.draw_text('Unfinished games', font, (255, 255, 255), screen, 300, 50, True)   # Draw the text menu
 
+        # Different interface according to the number of saved games (max is 3 unfinished games)
         if len(savedGames) == 0:
             button_1 = pygame.Rect(250, 200, 600, 100)
             button_1.centerx = screen_rect.centerx
@@ -26,6 +27,8 @@ def saves_listing(pygame, font, screen, screen_rect, userName):
             startY = 200
             buttons = []
             currIndex = 0
+            # Creates an array of buttons (build object + graphic display)
+            # It simplifies the defining activity part, right after events listening
             for savedGame in savedGames:
                 if currIndex < 3:
                     button = pygame.Rect(250, startY, 600, 100)
@@ -50,20 +53,21 @@ def saves_listing(pygame, font, screen, screen_rect, userName):
                 if event.button == 1:
                     click = True
 
+        # We make the buttons effective only if we need them
         if len(savedGames) > 0 and buttons[0].collidepoint((mx, my)):
             if click:
-                print("First save resumed")
-                print("Game launch should occur now")
+                print("First save resumed with id ", savedGames[0][0])
+                game.game(pygame, font, screen, screen_rect, userName, savedGames[0][0], savedGames[0])
                 return True
         if len(savedGames) > 1 and buttons[1].collidepoint((mx, my)):
             if click:
-                print("Second save resumed")
-                print("Game launch should occur now")
+                print("Second save resumed with id ", savedGames[1][0])
+                game.game(pygame, font, screen, screen_rect, userName, savedGames[1][0], savedGames[1])
                 return True
         if len(savedGames) > 2 and buttons[2].collidepoint((mx, my)):
             if click:
-                print("Third save resumed")
-                print("Game launch should occur now")
+                print("Third save resumed with id ", savedGames[2][0])
+                game.game(pygame, font, screen, screen_rect, userName, savedGames[2][0], savedGames[2])
                 return True
 
         pygame.display.flip()  # Refresh screen

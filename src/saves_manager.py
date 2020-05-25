@@ -1,16 +1,16 @@
 import json
 from datetime import datetime
 
-
+# Returns an object containing all saved games for every users
 def getSavedGames():
     print("Hello getSavedGames")
     with open('../Saves/saves.json') as json_file:
         data = json.load(json_file)
         return data
 
-
+# Returns an object containing unfinished games for a specific user
 def getUserUnfinishedGames(userName):
-    print("Hello getUserSavedGames")
+    print("Hello getUserUnfinishedGames")
     data = getSavedGames()
     userDatas = []
     for player in data['players']:
@@ -22,9 +22,9 @@ def getUserUnfinishedGames(userName):
 
     return userDatas
 
-
+# Returns the number of unfinished games recorded for an user
 def countUserUnfinishedGames(userName):
-    print("Hello getUserSavedGames")
+    print("Hello countUserUnfinishedGames")
     data = getSavedGames()
     savesCount = 0
     for player in data['players']:
@@ -34,7 +34,32 @@ def countUserUnfinishedGames(userName):
                     savesCount += 1
     return savesCount
 
+# Returns the last saved game datas for a given user
+def getLastSave(userName):
+    data = getSavedGames()
+    lastDate = 0
+    lastId = 0
+    for player in data['players']:
+        if player['name'] == userName:
+            for save in player['saves']:
+                if not save['game_over']:
+                    # This split the data of the data, removing ':' and '-' in order to convert all digits into a big int for later comparison
+                    currDate = int(save['date'][:4] + save['date'][5:7] + save['date'][8:10] + save['date'][11:13] + save['date'][14:16] + save['date'][17:19])
+                    if currDate > lastDate:
+                        lastDate = currDate
+                        lastId = int(save['id'])
 
+    # Now that we have the right id, let's extract and return all the associated save object
+    for player in data['players']:
+        if player['name'] == userName:
+            for save in player['saves']:
+                if not save['game_over']:
+                    if int(save['id']) == lastId:
+                        return [save['id'], save['date'], save['score']]
+    if lastDate == 0:
+        return -1
+
+# Returns an array of string arrays, containing every scores recorded for finished games only
 def getBestScores():
     print("Hello getBestScores")
     data = getSavedGames()
@@ -57,7 +82,7 @@ def getBestScores():
 
     return savedGames
 
-
+# Returns the next ID for game creation, based on the last ID used for a specific user
 def getNextId(userName):
     print("Hello getNextId")
     data = getSavedGames()
@@ -77,7 +102,7 @@ def getNextId(userName):
     else:
         return 0
 
-
+# Rewrite the saves file with the current game (edit or append, user and save or save only if existing user)
 def putSavedGame(userName, userScore, saveId):
     print("Hello putSavedGame")
     data = getSavedGames()
@@ -88,7 +113,7 @@ def putSavedGame(userName, userScore, saveId):
             playerExist = True
             for save in player['saves']:
                 # If we find an existing saved game
-                if save['id'] == saveId:
+                if save['id'] == int(saveId):
                     saveExist = True
                     save['score'] = '%.4f' % userScore
 
