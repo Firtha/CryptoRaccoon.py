@@ -1,15 +1,1 @@
-{
-  "game": "Crypto Raccoon",
-  "players": [
-  {"name": "Hard computer", "saves": [
-    {"id": 0, "date": "01/01/0000-00:00:00", "score": "25.0000"}]},
-  {"name": "Medium computer", "saves": [
-    {"id": 0, "date": "01/01/0000-00:00:00", "score": "10.0000"}]},
-  {"name": "Easy computer", "saves": [
-    {"id": 0, "date": "01/01/0000-00:00:00", "score": "2.5000"}]},
-  {"name": "test", "saves": [
-    {"id": 0, "date": "2020-05-24-22:19:24", "score": "0.0064"},
-    {"id": 1, "date": "2020-05-24-22:24:58", "score": "0.0029"},
-    {"id": 2, "date": "2020-05-24-22:27:36", "score": "0.0037"}]},
-  {"name": "Jeremy", "saves": [
-    {"id": 0, "date": "2020-05-24-22:28:21", "score": "540.0040"}]}]}
+{"game": "Crypto Raccoon", "players": [{"name": "Hard computer", "saves": [{"id": 0, "date": "01/01/0000-00:00:00", "score": "25.0000"}]}, {"name": "Medium computer", "saves": [{"id": 0, "date": "01/01/0000-00:00:00", "score": "10.0000"}]}, {"name": "Easy computer", "saves": [{"id": 0, "date": "01/01/0000-00:00:00", "score": "2.5000"}]}, {"name": "test", "saves": [{"id": 0, "date": "2020-05-24-22:19:24", "score": "0.0064"}, {"id": 1, "date": "2020-05-24-22:24:58", "score": "0.0029"}, {"id": 2, "date": "2020-05-24-22:27:36", "score": "0.0037"}, {"id": 3, "date": "2020-05-25-15:42:12", "score": "0.0003"}]}, {"name": "Jeremy", "saves": [{"id": 0, "date": "2020-05-24-22:28:21", "score": "540.0040"}]}]}

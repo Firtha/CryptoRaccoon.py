@@ -6,7 +6,7 @@ import saves_manager
 
 # define the player persona position
 def raccoon_player(x, y, pygame, screen):
-    raccoon = pygame.image.load("img/raccoon.png").convert_alpha()
+    raccoon = pygame.image.load("../img/raccoon.png").convert_alpha()
     screen.blit(raccoon, (x, y))
 
 

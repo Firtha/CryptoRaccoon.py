@@ -4,14 +4,14 @@ from datetime import datetime
 
 def getSavedGames():
     print("Hello getSavedGames")
-    with open('Saves/saves.json') as json_file:
+    with open('../Saves/saves.json') as json_file:
         data = json.load(json_file)
         return data
 
 
 def getBestScores():
     print("Hello getBestScores")
-    with open('Saves/saves.json') as json_file:
+    with open('../Saves/saves.json') as json_file:
         data = json.load(json_file)
         savedGames = []
         for player in data['players']:
@@ -35,7 +35,7 @@ def getBestScores():
 
 def getNextId(userName):
     print("Hello getNextId")
-    with open('Saves/saves.json') as json_file:
+    with open('../Saves/saves.json') as json_file:
         data = json.load(json_file)
         maxId = 0
         finded = False
@@ -83,5 +83,5 @@ def putSavedGame(userName, userScore, saveId):
                     'score': '%.4f' % userScore
                 })
 
-    with open('Saves/saves.json', 'w') as outfile:
+    with open('../Saves/saves.json', 'w') as outfile:
         json.dump(data, outfile)

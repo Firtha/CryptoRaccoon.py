@@ -9,7 +9,7 @@ pygame.init()
 
 # Init some basic parameters for the game (Screen size, font, icon, name)
 pygame.display.set_caption('Crypto Raccoon')                #Define the window name
-icon = pygame.image.load('img/icon.png')                    #Define the icon var
+icon = pygame.image.load('../img/icon.png')                    #Define the icon var
 pygame.display.set_icon(icon)                               #Define the window icon
 screen = pygame.display.set_mode((859, 1002))               #Define screen size
 screen_rect = screen.get_rect()                             #Get screen size as a rectangle, allow us to center other rectangle elements based on the screen size

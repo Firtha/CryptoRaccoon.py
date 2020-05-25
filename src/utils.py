@@ -11,5 +11,5 @@ def draw_text(text, font, color, surface, x, y, center):
 
 # Initialisation du background
 def init_game_background(pygame, screen):
-    fond = pygame.image.load("img/background.jpg").convert()
+    fond = pygame.image.load("../img/background.jpg").convert()
     screen.blit(fond, (0, 0))

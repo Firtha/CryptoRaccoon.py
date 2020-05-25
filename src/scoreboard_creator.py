@@ -8,7 +8,7 @@ def json_formatted(json_input):
 
 def update_scoreboard():
     data_user = data_collector.get_file_data()
-    data_scoreboard = data_collector.get_file('src/scoreboard.json')
+    data_scoreboard = data_collector.get_file('../Saves/scoreboard.json')
     users_score = []
     for key in data_user['players']:
         for value in key['save']:

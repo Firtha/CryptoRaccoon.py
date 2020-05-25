@@ -20,15 +20,15 @@ def stats_listing(pygame, font, screen, screen_rect, userName):
 
 ### init every needed icons for the stats windows 
     #winner trophy
-    trophy_first = pygame.image.load("img/medals/trophy_1.png").convert_alpha()
+    trophy_first = pygame.image.load("../img/medals/trophy_1.png").convert_alpha()
     trophy_first_s = pygame.transform.scale(trophy_first, (60, 60))
     
     #second trophy
-    trophy_second = pygame.image.load("img/medals/trophy_2.png").convert_alpha()
+    trophy_second = pygame.image.load("../img/medals/trophy_2.png").convert_alpha()
     trophy_second_s = pygame.transform.scale(trophy_second, (60, 60))
     
     #third trophy
-    trophy_third = pygame.image.load("img/medals/trophy_3.png").convert_alpha()
+    trophy_third = pygame.image.load("../img/medals/trophy_3.png").convert_alpha()
     trophy_third_s = pygame.transform.scale(trophy_third, (60, 60))
 
 
