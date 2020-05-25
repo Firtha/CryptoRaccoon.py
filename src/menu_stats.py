@@ -17,8 +17,21 @@ def stats_listing(pygame, font, screen, screen_rect, userName):
     #data = data_collector.get_file('src/scoreboard.json')
 
     savedGames = saves_manager.getBestScores()
-    winning_medals = pygame.image.load("img/medals/first.png").convert_alpha()
-    trophy1_s = pygame.transform.scale(winning_medals, (50, 50))
+
+### init every needed icons for the stats windows 
+    #winner trophy
+    trophy_first = pygame.image.load("img/medals/trophy_1.png").convert_alpha()
+    trophy_first_s = pygame.transform.scale(trophy_first, (60, 60))
+    
+    #second trophy
+    trophy_second = pygame.image.load("img/medals/trophy_2.png").convert_alpha()
+    trophy_second_s = pygame.transform.scale(trophy_second, (60, 60))
+    
+    #third trophy
+    trophy_third = pygame.image.load("img/medals/trophy_3.png").convert_alpha()
+    trophy_third_s = pygame.transform.scale(trophy_third, (60, 60))
+
+
     ######################################### start : graphic layout for the scoreboard
     list_line_pos = [200, 290, 380, 470, 560]
  
@@ -41,7 +54,9 @@ def stats_listing(pygame, font, screen, screen_rect, userName):
             top_rectangle += 90
 
         
-        screen.blit(trophy1_s, (80, 200))
+        screen.blit(trophy_first_s, (73, 210))
+        screen.blit(trophy_second_s, (73, 300))
+        screen.blit(trophy_third_s, (73, 390))
 
         # Max 5 lines displayed
         currIndex = 0
