@@ -4,7 +4,6 @@ from datetime import datetime
 
 # Returns an object containing all saved games for every users
 def getSavedGames():
-    print("Hello getSavedGames")
     with open('../Saves/saves.json') as json_file:
         data = json.load(json_file)
         return data
