@@ -27,6 +27,10 @@ def game(pygame, font, screen, screen_rect, userName, saveId, gameData):
     allowMoves = True
     flyUp = False
 
+    movingLeft = False
+    movingRight = False
+    moveTime = 0
+
     # If saveId = -1 then it means it's a new game
     if saveId == -1:
         saveId = saves_manager.getNextId(userName)
@@ -63,15 +67,32 @@ def game(pygame, font, screen, screen_rect, userName, saveId, gameData):
                     allowMoves = False
                     flyUp = True
                     flyTime = 0
-                if event.key == K_RIGHT and allowMoves:
-                    raccoon_new_Xpos = +75
-                    raccoon_Xpos += raccoon_new_Xpos
-                if event.key == K_LEFT and allowMoves:
-                    raccoon_new_Xpos = -75
-                    raccoon_Xpos += raccoon_new_Xpos
+                    movingLeft = False
+                    movingRight = False
+                if event.key == K_RIGHT and allowMoves and not movingLeft and not movingRight:
+                    movingRight = True
+                    moveTime = 0
+                if event.key == K_LEFT and allowMoves and not movingLeft and not movingRight:
+                    movingLeft = True
+                    moveTime = 0
 
             # if event.type == MOUSEBUTTONDOWN and event.button == 3 and event.pos[1] < 100:
             #    print("Zone dangereuse")
+
+        # Gradual moves handling
+        if movingLeft:
+            raccoon_Xpos += -5
+            moveTime += 1
+            if moveTime >= 10:
+                moveTime = 0
+                movingLeft = False
+
+        if movingRight:
+            raccoon_Xpos += 5
+            moveTime += 1
+            if moveTime >= 10:
+                moveTime = 0
+                movingRight = False
 
         # Jump handling (quick at first then decelerate)
         if flyUp:
