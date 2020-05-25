@@ -38,8 +38,10 @@ def game(pygame, font, screen, screen_rect, userName, saveId):
 
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
-                    if not game_menu(pygame, font, screen, screen_rect, userName):
+                    targetOptions = game_menu(pygame, font, screen, screen_rect, userName)
+                    if targetOptions == 1:
                         saves_manager.putSavedGame(userName, userScore, saveId)
+                    if targetOptions == 1 or targetOptions == -1:
                         running = False
                 if event.key == K_DOWN:
                     raccoon_new_Ypos = 80
@@ -101,12 +103,17 @@ def game_menu(pygame, font, screen, screen_rect, userName):
         button_2 = pygame.Rect(250, 400, 400,
                                100)  # Init button_2 rectangleparameters -> Rect(left, top, width, height)
         button_2.centerx = screen_rect.centerx  # The button x-center value is set to be equal to the screen x-center value
+        button_3 = pygame.Rect(250, 600, 400,
+                               100)  # Init button_3 rectangleparameters -> Rect(left, top, width, height)
+        button_3.centerx = screen_rect.centerx  # The button x-center value is set to be equal to the screen x-center value
 
         pygame.draw.rect(screen, (255, 255, 255), button_1)  # Draw the menubutton_1
         pygame.draw.rect(screen, (255, 255, 255), button_2)  # Draw the menubutton_2
+        pygame.draw.rect(screen, (255, 255, 255), button_3)  # Draw the menubutton_3
 
         utils.draw_text('RESUME', font, (0, 0, 0), screen, 300, 227, True)
         utils.draw_text('SAVE AND QUIT', font, (0, 0, 0), screen, 300, 427, True)
+        utils.draw_text('QUIT', font, (0, 0, 0), screen, 300, 627, True)
 
         # Event loop that will check if any input event occurs
         for event in pygame.event.get():
@@ -116,7 +123,7 @@ def game_menu(pygame, font, screen, screen_rect, userName):
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
                     print("Escape has been pushed -> RESUME")
-                    return True
+                    return 0
             if event.type == MOUSEBUTTONDOWN:
                 if event.button == 1:
                     click = True
@@ -124,10 +131,14 @@ def game_menu(pygame, font, screen, screen_rect, userName):
         if button_1.collidepoint((mx, my)):
             if click:
                 print("RESUME button clicked")
-                return True
+                return 0
         if button_2.collidepoint((mx, my)):
             if click:
                 print("SAVE&QUIT button clicked")
-                return False
+                return 1
+        if button_3.collidepoint((mx, my)):
+            if click:
+                print("QUIT button clicked")
+                return -1
 
         pygame.display.flip()  # Refresh screen

@@ -25,13 +25,16 @@ def saves_listing(pygame, font, screen, screen_rect, userName):
         else:
             startY = 200
             buttons = []
+            currIndex = 0
             for savedGame in savedGames:
-                button = pygame.Rect(250, startY, 600, 100)
-                button.centerx = screen_rect.centerx
-                pygame.draw.rect(screen, (255, 255, 255), button)
-                utils.draw_text(savedGame[1][:10] + " -> " + savedGame[2], font, (0, 0, 0), screen, 300, startY + 27, True)
-                buttons.append(button)
-                startY += 200
+                if currIndex < 3:
+                    button = pygame.Rect(250, startY, 600, 100)
+                    button.centerx = screen_rect.centerx
+                    pygame.draw.rect(screen, (255, 255, 255), button)
+                    utils.draw_text(savedGame[1][:10] + " -> " + savedGame[2], font, (0, 0, 0), screen, 300, startY + 27, True)
+                    buttons.append(button)
+                    startY += 200
+                currIndex += 1
 
 
         # Event loop that will check if any input event occurs
@@ -52,12 +55,12 @@ def saves_listing(pygame, font, screen, screen_rect, userName):
                 print("First save resumed")
                 print("Game launch should occur now")
                 return True
-        if len(savedGames) > 0 and buttons[1].collidepoint((mx, my)):
+        if len(savedGames) > 1 and buttons[1].collidepoint((mx, my)):
             if click:
                 print("Second save resumed")
                 print("Game launch should occur now")
                 return True
-        if len(savedGames) > 0 and buttons[2].collidepoint((mx, my)):
+        if len(savedGames) > 2 and buttons[2].collidepoint((mx, my)):
             if click:
                 print("Third save resumed")
                 print("Game launch should occur now")

@@ -23,6 +23,18 @@ def getUserUnfinishedGames(userName):
     return userDatas
 
 
+def countUserUnfinishedGames(userName):
+    print("Hello getUserSavedGames")
+    data = getSavedGames()
+    savesCount = 0
+    for player in data['players']:
+        if player['name'] == userName:
+            for save in player['saves']:
+                if not save['game_over']:
+                    savesCount += 1
+    return savesCount
+
+
 def getBestScores():
     print("Hello getBestScores")
     data = getSavedGames()
