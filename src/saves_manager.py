@@ -88,7 +88,7 @@ def putSavedGame(userName, userScore, saveId):
             playerExist = True
             for save in player['saves']:
                 # If we find an existing saved game
-                if save['id'] == saveId:
+                if save['id'] == int(saveId):
                     saveExist = True
                     save['score'] = '%.4f' % userScore
 

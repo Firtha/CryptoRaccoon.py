@@ -69,7 +69,7 @@ def main_menu(pygame, font, screen, screen_rect, userName):
             if click:
                 click = False
                 print("Start button clicked")
-                game.game(pygame, font, screen, screen_rect, userName, -1)
+                game.game(pygame, font, screen, screen_rect, userName, -1, [])
                 savesCount = saves_manager.countUserUnfinishedGames(userName)
         if button_2.collidepoint((mx, my)):
             if click:
@@ -82,6 +82,7 @@ def main_menu(pygame, font, screen, screen_rect, userName):
                     click = False
                     print("Saved Games button clicked")
                     menu_saves.saves_listing(pygame, font, screen, screen_rect, userName)
+                    savesCount = saves_manager.countUserUnfinishedGames(userName)
 
         pygame.display.flip()  # Refresh screen
 

@@ -52,18 +52,18 @@ def saves_listing(pygame, font, screen, screen_rect, userName):
 
         if len(savedGames) > 0 and buttons[0].collidepoint((mx, my)):
             if click:
-                print("First save resumed")
-                print("Game launch should occur now")
+                print("First save resumed with id ", savedGames[0][0])
+                game.game(pygame, font, screen, screen_rect, userName, savedGames[0][0], savedGames[0])
                 return True
         if len(savedGames) > 1 and buttons[1].collidepoint((mx, my)):
             if click:
-                print("Second save resumed")
-                print("Game launch should occur now")
+                print("Second save resumed with id ", savedGames[1][0])
+                game.game(pygame, font, screen, screen_rect, userName, savedGames[1][0], savedGames[1])
                 return True
         if len(savedGames) > 2 and buttons[2].collidepoint((mx, my)):
             if click:
-                print("Third save resumed")
-                print("Game launch should occur now")
+                print("Third save resumed with id ", savedGames[2][0])
+                game.game(pygame, font, screen, screen_rect, userName, savedGames[2][0], savedGames[2])
                 return True
 
         pygame.display.flip()  # Refresh screen

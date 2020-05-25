@@ -10,7 +10,7 @@ def raccoon_player(x, y, pygame, screen):
     screen.blit(raccoon, (x, y))
 
 
-def game(pygame, font, screen, screen_rect, userName, saveId):
+def game(pygame, font, screen, screen_rect, userName, saveId, gameData):
     # init player position in the screen and the image
     raccoon_Xpos = 0
     raccoon_Ypos = 880
@@ -20,11 +20,14 @@ def game(pygame, font, screen, screen_rect, userName, saveId):
     # If saveId = -1 then it means it's a new game
     if saveId == -1:
         saveId = saves_manager.getNextId(userName)
+        userScore = 0.0
+    else:
+        userScore = float(gameData[2])
+
 
     print("Game ID is ", saveId)
 
     fontScore = pygame.font.SysFont(None, 24)
-    userScore = 0.0
 
     pygame.display.flip()
     # BOUCLE INFINIE
