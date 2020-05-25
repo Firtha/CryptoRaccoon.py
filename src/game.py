@@ -17,12 +17,31 @@ def game(pygame, font, screen, screen_rect, userName, saveId, gameData):
     raccoon_new_Xpos = 0
     raccoon_new_Ypos = 0
 
+    # Fixed value for gravity
+    gravity = 250
+
+    # Fly time counting var
+    flyTime = 0
+
+    # Character state management vars
+    allowMoves = True
+    flyUp = False
+
+    movingLeft = False
+    movingRight = False
+    moveTime = 0
+
     # If saveId = -1 then it means it's a new game
     if saveId == -1:
         saveId = saves_manager.getNextId(userName)
         userScore = 0.0
+        userLife = 0
     else:
         userScore = float(gameData[2])
+        userLife = int(gameData[3])
+
+    heartLives = pygame.image.load("../img/heart.png").convert_alpha()
+    heartLives = pygame.transform.scale(heartLives, (60, 60))
 
 
     print("Game ID is ", saveId)
@@ -44,24 +63,59 @@ def game(pygame, font, screen, screen_rect, userName, saveId, gameData):
                 if event.key == K_ESCAPE:
                     targetOptions = game_menu(pygame, font, screen, screen_rect, userName)
                     if targetOptions == 1:
-                        saves_manager.putSavedGame(userName, userScore, saveId)
+                        saves_manager.putSavedGame(userName, userScore, saveId, userLife)
                     if targetOptions == 1 or targetOptions == -1:
                         running = False
-                if event.key == K_DOWN:
-                    raccoon_new_Ypos = 80
-                    raccoon_Ypos += raccoon_new_Ypos
-                if event.key == K_UP:
-                    raccoon_new_Ypos = -80
-                    raccoon_Ypos += raccoon_new_Ypos
-                if event.key == K_RIGHT:
-                    raccoon_new_Xpos = +75
-                    raccoon_Xpos += raccoon_new_Xpos
-                if event.key == K_LEFT:
-                    raccoon_new_Xpos = -75
-                    raccoon_Xpos += raccoon_new_Xpos
+
+                # Jumping will block any other action and will trigger animation
+                if event.key == K_UP and allowMoves:
+                    allowMoves = False
+                    flyUp = True
+                    flyTime = 0
+                if event.key == K_RIGHT and allowMoves and not movingLeft and not movingRight:
+                    movingRight = True
+                    moveTime = 0
+                if event.key == K_LEFT and allowMoves and not movingLeft and not movingRight:
+                    movingLeft = True
+                    moveTime = 0
 
             # if event.type == MOUSEBUTTONDOWN and event.button == 3 and event.pos[1] < 100:
             #    print("Zone dangereuse")
+
+        # Gradual moves handling
+        if movingLeft:
+            raccoon_Xpos += -7
+            moveTime += 1
+            if moveTime >= 10:
+                moveTime = 0
+                if raccoon_Ypos == 880:
+                    movingLeft = False
+
+        if movingRight:
+            raccoon_Xpos += 7
+            moveTime += 1
+            if moveTime >= 10:
+                moveTime = 0
+                if raccoon_Ypos == 880:
+                    movingRight = False
+
+        # Jump handling (quick at first then decelerate)
+        if flyUp:
+            raccoon_Ypos -= gravity * (40 - flyTime) / 500
+            flyTime += 1
+            if flyTime >= 40:
+                flyUp = False
+                flyTime = 0
+
+        # Gravity handling (slow at first then accelerate)
+        if not allowMoves and not flyUp:
+            if (raccoon_Ypos + gravity * flyTime / 500) > 880:
+                raccoon_Ypos = 880
+                allowMoves = True
+                moveTime = 10
+            else:
+                raccoon_Ypos += gravity * flyTime / 500
+            flyTime += 1
 
         # put your game code below :
         utils.init_game_background(pygame, screen)
@@ -75,6 +129,9 @@ def game(pygame, font, screen, screen_rect, userName, saveId, gameData):
         utils.draw_text('%.4f' % userScore, fontScore, (0, 0, 0),
                         screen, 30, 45, False)  # Draw the score
 
+        for x in range(userLife):
+            screen.blit(heartLives, (200 + 70 * x, 10))
+
         userScore += 0.00001
 
         # check raccon's position on the screen
@@ -82,11 +139,6 @@ def game(pygame, font, screen, screen_rect, userName, saveId, gameData):
             raccoon_Xpos = 0
         elif raccoon_Xpos >= 660:
             raccoon_Xpos = 660
-
-        if raccoon_Ypos <= 720:
-            raccoon_Ypos = 720
-        elif raccoon_Ypos >= 880:
-            raccoon_Ypos = 880
 
         raccoon_player(raccoon_Xpos, raccoon_Ypos, pygame, screen)
         pygame.display.flip()

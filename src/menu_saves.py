@@ -10,6 +10,12 @@ def saves_listing(pygame, font, screen, screen_rect, userName):
     print("User saves list incoming")
     savedGames = saves_manager.getUserUnfinishedGames(userName)
 
+    delBtn = pygame.image.load("../img/delete-btn.png").convert_alpha()
+    delBtn = pygame.transform.scale(delBtn, (60, 60))
+
+    heartLives = pygame.image.load("../img/heart.png").convert_alpha()
+    heartLives = pygame.transform.scale(heartLives, (30, 30))
+
     click = False
     running = True
     while running:
@@ -24,9 +30,6 @@ def saves_listing(pygame, font, screen, screen_rect, userName):
             pygame.draw.rect(screen, (255, 255, 255), button_1)  # Draw the menubutton_1
             utils.draw_text("Time to start a new game !", font, (0, 0, 0), screen, 300, 227, True)
         else:
-            delBtn = pygame.image.load("../img/delete-btn.png").convert_alpha()
-            delBtn = pygame.transform.scale(delBtn, (60, 60))
-
             startY = 200
             buttons = []
             delCrosses = []
@@ -41,6 +44,8 @@ def saves_listing(pygame, font, screen, screen_rect, userName):
                     utils.draw_text(savedGame[1][:10] + " -> " + savedGame[2], font, (0, 0, 0), screen, 300, startY + 27, True)
                     buttons.append(button)
 
+                    for x in range(int(savedGame[3])):
+                        screen.blit(heartLives, (350 + x * 50, startY + 75))
                     screen.blit(delBtn, (750, startY + 27))
                     delCross = pygame.Rect(750, startY + 27, 50, 50)
                     delCrosses.append(delCross)
