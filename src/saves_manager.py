@@ -10,7 +10,7 @@ def getSavedGames():
 
 
 def getUserUnfinishedGames(userName):
-    print("Hello getUserSavedGames")
+    print("Hello getUserUnfinishedGames")
     data = getSavedGames()
     userDatas = []
     for player in data['players']:
@@ -24,7 +24,7 @@ def getUserUnfinishedGames(userName):
 
 
 def countUserUnfinishedGames(userName):
-    print("Hello getUserSavedGames")
+    print("Hello countUserUnfinishedGames")
     data = getSavedGames()
     savesCount = 0
     for player in data['players']:
@@ -34,6 +34,28 @@ def countUserUnfinishedGames(userName):
                     savesCount += 1
     return savesCount
 
+
+def getLastSave(userName):
+    data = getSavedGames()
+    lastDate = 0
+    lastId = 0
+    for player in data['players']:
+        if player['name'] == userName:
+            for save in player['saves']:
+                if not save['game_over']:
+                    currDate = int(save['date'][:4] + save['date'][5:7] + save['date'][8:10] + save['date'][11:13] + save['date'][14:16] + save['date'][17:19])
+                    if currDate > lastDate:
+                        lastDate = currDate
+                        lastId = int(save['id'])
+
+    for player in data['players']:
+        if player['name'] == userName:
+            for save in player['saves']:
+                if not save['game_over']:
+                    if int(save['id']) == lastId:
+                        return [save['id'], save['date'], save['score']]
+    if lastDate == 0:
+        return -1
 
 def getBestScores():
     print("Hello getBestScores")
