@@ -26,6 +26,7 @@ def game(pygame, font, screen, screen_rect, userName, saveId, gameData):
 
 
     print("Game ID is ", saveId)
+    print("Starting score is ", userScore)
 
     fontScore = pygame.font.SysFont(None, 24)
 
@@ -91,6 +92,7 @@ def game(pygame, font, screen, screen_rect, userName, saveId, gameData):
         pygame.display.flip()
 
 
+# Returns value are used to define the next action to take (-1 quit without saving, 0 resume game and 1 quit&save)
 def game_menu(pygame, font, screen, screen_rect, userName):
     click = False
     running = True
