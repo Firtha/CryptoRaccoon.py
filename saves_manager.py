@@ -20,7 +20,7 @@ def getBestScores():
                 savedGames.append(savedGame)
 
     for x in range(len(savedGames)-1):
-        for y in range(x+1,len(savedGames)):
+        for y in range(x+1, len(savedGames)):
             if float(savedGames[x][1]) < float(savedGames[y][1]):
                 tmp = savedGames[x]
                 savedGames[x] = savedGames[y]

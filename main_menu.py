@@ -144,9 +144,9 @@ def stats_listing(pygame, font, screen, screen_rect, userName):
     color = (255, 255, 255)
     active = False
     done = False
-    data = data_collector.get_file('src/scoreboard.json')
+    #data = data_collector.get_file('src/scoreboard.json')
 
-    saves_manager.getBestScores()
+    savedGames = saves_manager.getBestScores()
 
     ######################################### start : graphic layout for the scoreboard
     list_line_pos = [200, 290, 380, 470, 560]
@@ -163,10 +163,14 @@ def stats_listing(pygame, font, screen, screen_rect, userName):
             pygame.draw.rect(screen, color, pygame.Rect(179, i, 500, 80))
             top_rectangle += 90
 
-        for v in data['bestplayers']:
-            user_stat = v['name'] + " " + str(v['score'])
-            utils.draw_text(user_stat, font, (0, 0, 0), screen, 300, top_text_pos, True)
-            top_text_pos += 90
+        # Max 5 lines displayed
+        currIndex = 0
+        for savedGame in savedGames:
+            if currIndex < 5:
+                user_stat = savedGame[0] + " - " + savedGame[1]
+                utils.draw_text(user_stat, font, (0, 0, 0), screen, 300, top_text_pos, True)
+                top_text_pos += 90
+            currIndex += 1
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
