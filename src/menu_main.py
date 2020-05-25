@@ -20,9 +20,13 @@ def main_menu(pygame, font, screen, screen_rect, userName):
     while running:
         if savesCount >= 3:
             startDisplayed = False
+        else:
+            startDisplayed = True
 
         if savesCount == 0:
             savedDisplayed = False
+        else:
+            savedDisplayed = True
 
         # Define mouse click to false
         mx, my = pygame.mouse.get_pos()  # Init mouse cursor position for the menu

@@ -1,12 +1,14 @@
 import json
 from datetime import datetime
 
+
 # Returns an object containing all saved games for every users
 def getSavedGames():
     print("Hello getSavedGames")
     with open('../Saves/saves.json') as json_file:
         data = json.load(json_file)
         return data
+
 
 # Returns an object containing unfinished games for a specific user
 def getUserUnfinishedGames(userName):
@@ -19,8 +21,8 @@ def getUserUnfinishedGames(userName):
                 if not save['game_over']:
                     userData = [str(save['id']), save['date'], save['score']]
                     userDatas.append(userData)
-
     return userDatas
+
 
 # Returns the number of unfinished games recorded for an user
 def countUserUnfinishedGames(userName):
@@ -32,7 +34,9 @@ def countUserUnfinishedGames(userName):
             for save in player['saves']:
                 if not save['game_over']:
                     savesCount += 1
+    print("Unfinished games found : ", savesCount)
     return savesCount
+
 
 # Returns the last saved game datas for a given user
 def getLastSave(userName):
@@ -59,6 +63,7 @@ def getLastSave(userName):
     if lastDate == 0:
         return -1
 
+
 # Returns an array of string arrays, containing every scores recorded for finished games only
 def getBestScores():
     print("Hello getBestScores")
@@ -82,6 +87,7 @@ def getBestScores():
 
     return savedGames
 
+
 # Returns the next ID for game creation, based on the last ID used for a specific user
 def getNextId(userName):
     print("Hello getNextId")
@@ -101,6 +107,23 @@ def getNextId(userName):
         return maxId + 1
     else:
         return 0
+
+
+def deleteSavedGame(userName, saveId):
+    print("Hello deleteSavedGame for user ", userName, " and id ", saveId)
+    data = getSavedGames()
+    currPlayer = 0
+    for player in data['players']:
+        currSave = 0
+        for save in player['saves']:
+            if save['id'] == int(saveId) and player['name'] == userName:
+                del data['players'][currPlayer]['saves'][currSave]
+            currSave += 1
+        currPlayer += 1
+
+    with open('../Saves/saves.json', 'w') as outfile:
+        json.dump(data, outfile)
+
 
 # Rewrite the saves file with the current game (edit or append, user and save or save only if existing user)
 def putSavedGame(userName, userScore, saveId):

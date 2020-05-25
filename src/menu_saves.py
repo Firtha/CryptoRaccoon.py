@@ -24,8 +24,12 @@ def saves_listing(pygame, font, screen, screen_rect, userName):
             pygame.draw.rect(screen, (255, 255, 255), button_1)  # Draw the menubutton_1
             utils.draw_text("Time to start a new game !", font, (0, 0, 0), screen, 300, 227, True)
         else:
+            delBtn = pygame.image.load("../img/delete-btn.png").convert_alpha()
+            delBtn = pygame.transform.scale(delBtn, (60, 60))
+
             startY = 200
             buttons = []
+            delCrosses = []
             currIndex = 0
             # Creates an array of buttons (build object + graphic display)
             # It simplifies the defining activity part, right after events listening
@@ -36,6 +40,11 @@ def saves_listing(pygame, font, screen, screen_rect, userName):
                     pygame.draw.rect(screen, (255, 255, 255), button)
                     utils.draw_text(savedGame[1][:10] + " -> " + savedGame[2], font, (0, 0, 0), screen, 300, startY + 27, True)
                     buttons.append(button)
+
+                    screen.blit(delBtn, (750, startY + 27))
+                    delCross = pygame.Rect(750, startY + 27, 50, 50)
+                    delCrosses.append(delCross)
+
                     startY += 200
                 currIndex += 1
 
@@ -54,20 +63,37 @@ def saves_listing(pygame, font, screen, screen_rect, userName):
                     click = True
 
         # We make the buttons effective only if we need them
-        if len(savedGames) > 0 and buttons[0].collidepoint((mx, my)):
-            if click:
+        # Buttons    : Take back a saved game
+        # DelCrosses : Delete the saved game on the current line
+        if len(savedGames) > 0 and click:
+            if buttons[0].collidepoint((mx, my)):
                 print("First save resumed with id ", savedGames[0][0])
                 game.game(pygame, font, screen, screen_rect, userName, savedGames[0][0], savedGames[0])
                 return True
-        if len(savedGames) > 1 and buttons[1].collidepoint((mx, my)):
-            if click:
+            if delCrosses[0].collidepoint((mx, my)):
+                print("First save deleted with id ", savedGames[0][0])
+                saves_manager.deleteSavedGame(userName, savedGames[0][0])
+                savedGames = saves_manager.getUserUnfinishedGames(userName)
+                click = False
+        if len(savedGames) > 1 and click:
+            if buttons[1].collidepoint((mx, my)):
                 print("Second save resumed with id ", savedGames[1][0])
                 game.game(pygame, font, screen, screen_rect, userName, savedGames[1][0], savedGames[1])
                 return True
-        if len(savedGames) > 2 and buttons[2].collidepoint((mx, my)):
-            if click:
+            if delCrosses[1].collidepoint((mx, my)):
+                print("First save deleted with id ", savedGames[1][0])
+                saves_manager.deleteSavedGame(userName, savedGames[1][0])
+                savedGames = saves_manager.getUserUnfinishedGames(userName)
+                click = False
+        if len(savedGames) > 2 and click:
+            if buttons[2].collidepoint((mx, my)):
                 print("Third save resumed with id ", savedGames[2][0])
                 game.game(pygame, font, screen, screen_rect, userName, savedGames[2][0], savedGames[2])
                 return True
+            if delCrosses[2].collidepoint((mx, my)):
+                print("First save deleted with id ", savedGames[2][0])
+                saves_manager.deleteSavedGame(userName, savedGames[2][0])
+                savedGames = saves_manager.getUserUnfinishedGames(userName)
+                click = False
 
         pygame.display.flip()  # Refresh screen

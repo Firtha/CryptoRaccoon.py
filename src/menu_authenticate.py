@@ -55,8 +55,7 @@ def authenticate_user(pygame, font, screen, screen_rect):
             if event.type == pygame.KEYDOWN:
                 if active:
                     if event.key == pygame.K_RETURN:
-                        print(text)
-                        text = ''
+                        print("enter key pushed")
                         done = True
                     elif event.key == pygame.K_BACKSPACE:
                         text = text[:-1]
