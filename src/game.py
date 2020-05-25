@@ -17,6 +17,16 @@ def game(pygame, font, screen, screen_rect, userName, saveId, gameData):
     raccoon_new_Xpos = 0
     raccoon_new_Ypos = 0
 
+    # Fixed value for gravity
+    gravity = 250
+
+    # Fly time counting var
+    flyTime = 0
+
+    # Character state management vars
+    allowMoves = True
+    flyUp = False
+
     # If saveId = -1 then it means it's a new game
     if saveId == -1:
         saveId = saves_manager.getNextId(userName)
@@ -47,21 +57,38 @@ def game(pygame, font, screen, screen_rect, userName, saveId, gameData):
                         saves_manager.putSavedGame(userName, userScore, saveId)
                     if targetOptions == 1 or targetOptions == -1:
                         running = False
-                if event.key == K_DOWN:
-                    raccoon_new_Ypos = 80
-                    raccoon_Ypos += raccoon_new_Ypos
-                if event.key == K_UP:
-                    raccoon_new_Ypos = -80
-                    raccoon_Ypos += raccoon_new_Ypos
-                if event.key == K_RIGHT:
+
+                # Jumping will block any other action and will trigger animation
+                if event.key == K_UP and allowMoves:
+                    allowMoves = False
+                    flyUp = True
+                    flyTime = 0
+                if event.key == K_RIGHT and allowMoves:
                     raccoon_new_Xpos = +75
                     raccoon_Xpos += raccoon_new_Xpos
-                if event.key == K_LEFT:
+                if event.key == K_LEFT and allowMoves:
                     raccoon_new_Xpos = -75
                     raccoon_Xpos += raccoon_new_Xpos
 
             # if event.type == MOUSEBUTTONDOWN and event.button == 3 and event.pos[1] < 100:
             #    print("Zone dangereuse")
+
+        # Jump handling (quick at first then decelerate)
+        if flyUp:
+            raccoon_Ypos -= gravity * (40 - flyTime) / 500
+            flyTime += 1
+            if flyTime >= 40:
+                flyUp = False
+                flyTime = 0
+
+        # Gravity handling (slow at first then accelerate)
+        if not allowMoves and not flyUp:
+            if (raccoon_Ypos + gravity * flyTime / 500) > 880:
+                raccoon_Ypos = 880
+                allowMoves = True
+            else:
+                raccoon_Ypos += gravity * flyTime / 500
+            flyTime += 1
 
         # put your game code below :
         utils.init_game_background(pygame, screen)
@@ -82,11 +109,6 @@ def game(pygame, font, screen, screen_rect, userName, saveId, gameData):
             raccoon_Xpos = 0
         elif raccoon_Xpos >= 660:
             raccoon_Xpos = 660
-
-        if raccoon_Ypos <= 720:
-            raccoon_Ypos = 720
-        elif raccoon_Ypos >= 880:
-            raccoon_Ypos = 880
 
         raccoon_player(raccoon_Xpos, raccoon_Ypos, pygame, screen)
         pygame.display.flip()
