@@ -1,21 +1,50 @@
 import sys
-from pygame.constants import *
+import pygame
 import utils
 import saves_manager
 
+from truck import Truck
 
-# define the player persona position
-def raccoon_player(x, y, pygame, screen):
-    raccoon = pygame.image.load("../img/raccoon.png").convert_alpha()
-    screen.blit(raccoon, (x, y))
+# class qui représente le jeu
+class Game:
+    def __init__(self):
+        self.player = Player()
+        self.all_trucks = pygame.sprite.Group()
+        self.pressed = {}
+        self.spawn_truck()
+        
+    
+    def spawn_truck(self):
+        truck = Truck()
+        self.all_trucks.add(truck)
+
+# class du joueur
+class Player(pygame.sprite.Sprite):
+
+    def __init__(self):
+        super().__init__()
+        self.health = 100
+        self.max_health = 100
+        self.velocity = 20
+        self.image = pygame.image.load("../img/raccoon.png").convert_alpha()
+        self.rect = self.image.get_rect()
+        self.rect.x = 50
+        self.rect.y = 880
+        self.max_y = 720
+    
+    def move_right(self):
+        self.rect.x += self.velocity
+
+    def move_left(self):
+        self.rect.x -= self.velocity
+    
+    def jump(self):
+        self.rect.y -= self.velocity
 
 
 def game(pygame, font, screen, screen_rect, userName, saveId, gameData):
-    # init player position in the screen and the image
-    raccoon_Xpos = 0
-    raccoon_Ypos = 880
-    raccoon_new_Xpos = 0
-    raccoon_new_Ypos = 0
+
+    game = Game()
 
     # If saveId = -1 then it means it's a new game
     if saveId == -1:
@@ -24,71 +53,58 @@ def game(pygame, font, screen, screen_rect, userName, saveId, gameData):
     else:
         userScore = float(gameData[2])
 
-
     print("Game ID is ", saveId)
     print("Starting score is ", userScore)
-
     fontScore = pygame.font.SysFont(None, 24)
-
     pygame.display.flip()
+
     # BOUCLE INFINIE
     running = True
     while running:
-        for event in pygame.event.get():
 
-            if event.type == QUIT:
+        for truck in game.all_trucks:
+            truck.drive()
+
+        if game.pressed.get(pygame.K_RIGHT) and game.player.rect.x + game.player.rect.width < screen.get_width() :
+            game.player.move_right()
+        elif game.pressed.get(pygame.K_LEFT) and game.player.rect.x > 0:
+            game.player.move_left()
+        if game.pressed.get(pygame.K_UP) and game.player.rect.y > 500 :
+            game.player.jump()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-
-            if event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
+            elif event.type == pygame.KEYDOWN:
+                game.pressed[event.key] = True
+                if event.key == pygame.K_ESCAPE:
                     targetOptions = game_menu(pygame, font, screen, screen_rect, userName)
                     if targetOptions == 1:
                         saves_manager.putSavedGame(userName, userScore, saveId)
                     if targetOptions == 1 or targetOptions == -1:
                         running = False
-                if event.key == K_DOWN:
-                    raccoon_new_Ypos = 80
-                    raccoon_Ypos += raccoon_new_Ypos
-                if event.key == K_UP:
-                    raccoon_new_Ypos = -80
-                    raccoon_Ypos += raccoon_new_Ypos
-                if event.key == K_RIGHT:
-                    raccoon_new_Xpos = +75
-                    raccoon_Xpos += raccoon_new_Xpos
-                if event.key == K_LEFT:
-                    raccoon_new_Xpos = -75
-                    raccoon_Xpos += raccoon_new_Xpos
 
-            # if event.type == MOUSEBUTTONDOWN and event.button == 3 and event.pos[1] < 100:
-            #    print("Zone dangereuse")
+            elif event.type == pygame.KEYUP:
+                game.pressed[event.key] = False
+                if event.key == pygame.K_UP:
+                    game.player.rect.y = 880
 
-        # put your game code below :
+        # draw the background
         utils.init_game_background(pygame, screen)
 
-        utils.draw_text('User : ' + userName, fontScore, (0, 0, 0),
-                        screen, 15, 10, False)  # Draw the user name
+        # draw the player 
+        screen.blit(game.player.image, game.player.rect)
 
-        utils.draw_text('Score (BTC) :', fontScore, (0, 0, 0),
-                        screen, 15, 30, False)  # Draw the score declaration
-
-        utils.draw_text('%.4f' % userScore, fontScore, (0, 0, 0),
-                        screen, 30, 45, False)  # Draw the score
+        # draw players stats
+        utils.draw_text('User : ' + userName, fontScore, (0, 0, 0), screen, 15, 10, False)  # Draw the user name
+        utils.draw_text('Score (BTC) :', fontScore, (0, 0, 0), screen, 15, 30, False)  # Draw the score declaration
+        utils.draw_text('%.4f' % userScore, fontScore, (0, 0, 0), screen, 30, 45, False)  # Draw the score
+        
+        #draw trucks
+        game.all_trucks.draw(screen)
 
         userScore += 0.00001
-
-        # check raccon's position on the screen
-        if raccoon_Xpos <= 0:
-            raccoon_Xpos = 0
-        elif raccoon_Xpos >= 660:
-            raccoon_Xpos = 660
-
-        if raccoon_Ypos <= 720:
-            raccoon_Ypos = 720
-        elif raccoon_Ypos >= 880:
-            raccoon_Ypos = 880
-
-        raccoon_player(raccoon_Xpos, raccoon_Ypos, pygame, screen)
         pygame.display.flip()
 
 
