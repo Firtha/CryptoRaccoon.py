@@ -18,7 +18,7 @@ class Game:
     def spawn_truck(self):
         truck = Truck(self)
         self.all_trucks.add(truck)
-    
+      
     def check_collision(self, sprite, group):
         return pygame.sprite.spritecollide(sprite, group, False, pygame.sprite.collide_mask)
 
@@ -42,12 +42,14 @@ class Player(pygame.sprite.Sprite):
         if not self.game.check_collision(self, self.game.all_trucks):
             self.rect.x += self.velocity
 
+    def damaged(self, amount):
+        self.health -= amount
+
     def move_left(self):
         self.rect.x -= self.velocity
     
     def jump(self):
-        if not self.game.check_collision(self, self.game.all_trucks):
-            self.rect.y -= self.jump_velocity
+        self.rect.y -= self.jump_velocity
 
 
 
@@ -113,8 +115,14 @@ def game(pygame, font, screen, screen_rect, userName, saveId, gameData):
         #draw trucks
         game.all_trucks.draw(screen)
 
-        if game.check_collision(game.player, game.all_trucks):
-            game.player.health -=25
+        #Collision check, if collision player lose 25 of health
+        if game.check_collision(game.player, game.all_trucks) :
+            game.player.damaged(25)
+
+        # GAme over when the health is = or below 0
+        if game.player.health <= 0:
+            game_over(pygame, font, screen, screen_rect, userName)
+
 
         userScore += 0.00001
         pygame.display.flip()
@@ -122,6 +130,62 @@ def game(pygame, font, screen, screen_rect, userName, saveId, gameData):
 
 # Returns value are used to define the next action to take (-1 quit without saving, 0 resume game and 1 quit&save)
 def game_menu(pygame, font, screen, screen_rect, userName):
+    click = False
+    running = True
+    while running:
+        # Define mouse click to false
+        mx, my = pygame.mouse.get_pos()  # Init mouse cursor position for the menu
+        utils.init_game_background(pygame, screen)  # Start the init_game_background function
+        utils.draw_text('PAUSE', font, (255, 255, 255),
+                        screen, 300, 50, True)  # Draw the text menu
+        button_1 = pygame.Rect(250, 200, 400,
+                               100)  # Init button_1 rectangleparameters -> Rect(left, top, width, height)
+        button_1.centerx = screen_rect.centerx  # The button x-center value is set to be equal to the screen x-center value
+        button_2 = pygame.Rect(250, 400, 400,
+                               100)  # Init button_2 rectangleparameters -> Rect(left, top, width, height)
+        button_2.centerx = screen_rect.centerx  # The button x-center value is set to be equal to the screen x-center value
+        button_3 = pygame.Rect(250, 600, 400,
+                               100)  # Init button_3 rectangleparameters -> Rect(left, top, width, height)
+        button_3.centerx = screen_rect.centerx  # The button x-center value is set to be equal to the screen x-center value
+
+        pygame.draw.rect(screen, (255, 255, 255), button_1)  # Draw the menubutton_1
+        pygame.draw.rect(screen, (255, 255, 255), button_2)  # Draw the menubutton_2
+        pygame.draw.rect(screen, (255, 255, 255), button_3)  # Draw the menubutton_3
+
+        utils.draw_text('RESUME', font, (0, 0, 0), screen, 300, 227, True)
+        utils.draw_text('SAVE AND QUIT', font, (0, 0, 0), screen, 300, 427, True)
+        utils.draw_text('QUIT', font, (0, 0, 0), screen, 300, 627, True)
+
+        # Event loop that will check if any input event occurs
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    print("Escape has been pushed -> RESUME")
+                    return 0
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    click = True
+
+        if button_1.collidepoint((mx, my)):
+            if click:
+                print("RESUME button clicked")
+                return 0
+        if button_2.collidepoint((mx, my)):
+            if click:
+                print("SAVE&QUIT button clicked")
+                return 1
+        if button_3.collidepoint((mx, my)):
+            if click:
+                print("QUIT button clicked")
+                return -1
+
+        pygame.display.flip()  # Refresh screen
+
+# Returns value are used to define the next action to take (-1 quit without saving, 0 resume game and 1 quit&save)
+def game_over(pygame, font, screen, screen_rect, userName):
     click = False
     running = True
     while running:

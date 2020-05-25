@@ -17,4 +17,7 @@ class Truck(pygame.sprite.Sprite):
         if not self.game.check_collision(self, self.game.all_players):
             self.rect.x -= self.velocity
         else:
-            self.rect.x += 250
+            self.explode()
+    
+    def explode(self):
+        self.game.all_trucks.remove(self)
