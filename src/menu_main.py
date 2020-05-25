@@ -7,6 +7,7 @@ import menu_stats
 import menu_authenticate
 import data_collector
 import saves_manager
+import menu_saves
 
 # Main_menu : create the menu window
 def main_menu(pygame, font, screen, screen_rect, userName):
@@ -65,20 +66,7 @@ def main_menu(pygame, font, screen, screen_rect, userName):
             if click:
                 click = False
                 print("Saved Games button clicked")
-                saves_listing(pygame, font, screen, screen_rect, userName)
+                menu_saves.saves_listing(pygame, font, screen, screen_rect, userName)
 
         pygame.display.flip()  # Refresh screen
 
-
-# Saves_listing : Create the user saves (unfinished games only) list window
-def saves_listing(pygame, font, screen, screen_rect, userName):
-    print("User saves list incoming")
-    data = saves_manager.getSavedGames()
-    for player in data['players']:
-        print('Name: ', player['name'])
-        if player['name'] == userName:
-            for save in player['saves']:
-                print('ID: ', save['id'])
-                print('Date: ' + save['date'])
-                print('Score: ' + save['score'])
-                print('')

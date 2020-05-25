@@ -9,13 +9,27 @@ def getSavedGames():
         return data
 
 
+def getUserUnfinishedGames(userName):
+    print("Hello getUserSavedGames")
+    data = getSavedGames()
+    userDatas = []
+    for player in data['players']:
+        if player['name'] == userName:
+            for save in player['saves']:
+                if not save['game_over']:
+                    userData = [str(save['id']), save['date'], save['score']]
+                    userDatas.append(userData)
+
+    return userDatas
+
+
 def getBestScores():
     print("Hello getBestScores")
-    with open('../Saves/saves.json') as json_file:
-        data = json.load(json_file)
-        savedGames = []
-        for player in data['players']:
-            for save in player['saves']:
+    data = getSavedGames()
+    savedGames = []
+    for player in data['players']:
+        for save in player['saves']:
+            if save['game_over']:
                 savedGame = [player['name'], save['score']]
                 savedGames.append(savedGame)
 
@@ -32,26 +46,24 @@ def getBestScores():
     return savedGames
 
 
-
 def getNextId(userName):
     print("Hello getNextId")
-    with open('../Saves/saves.json') as json_file:
-        data = json.load(json_file)
-        maxId = 0
-        finded = False
-        for player in data['players']:
-            if player['name'] == userName:
-                print("Save finded for ", userName)
-                for save in player['saves']:
-                    print("Save finded with id ", save['id'])
-                    if save['id'] >= maxId:
-                        maxId = save['id']
-                        finded = True
+    data = getSavedGames()
+    maxId = 0
+    finded = False
+    for player in data['players']:
+        if player['name'] == userName:
+            print("Save finded for ", userName)
+            for save in player['saves']:
+                print("Save finded with id ", save['id'])
+                if save['id'] >= maxId:
+                    maxId = save['id']
+                    finded = True
 
-        if finded:
-            return maxId + 1
-        else:
-            return 0
+    if finded:
+        return maxId + 1
+    else:
+        return 0
 
 
 def putSavedGame(userName, userScore, saveId):
@@ -80,7 +92,8 @@ def putSavedGame(userName, userScore, saveId):
                 player['saves'].append({
                     'id': saveId,
                     'date': datetime.today().strftime('%Y-%m-%d-%H:%M:%S'),
-                    'score': '%.4f' % userScore
+                    'score': '%.4f' % userScore,
+                    'game_over': False
                 })
 
     with open('../Saves/saves.json', 'w') as outfile:
