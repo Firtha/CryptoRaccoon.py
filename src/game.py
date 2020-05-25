@@ -67,8 +67,6 @@ def game(pygame, font, screen, screen_rect, userName, saveId, gameData):
                     allowMoves = False
                     flyUp = True
                     flyTime = 0
-                    movingLeft = False
-                    movingRight = False
                 if event.key == K_RIGHT and allowMoves and not movingLeft and not movingRight:
                     movingRight = True
                     moveTime = 0
@@ -81,18 +79,20 @@ def game(pygame, font, screen, screen_rect, userName, saveId, gameData):
 
         # Gradual moves handling
         if movingLeft:
-            raccoon_Xpos += -5
+            raccoon_Xpos += -7
             moveTime += 1
             if moveTime >= 10:
                 moveTime = 0
-                movingLeft = False
+                if raccoon_Ypos == 880:
+                    movingLeft = False
 
         if movingRight:
-            raccoon_Xpos += 5
+            raccoon_Xpos += 7
             moveTime += 1
             if moveTime >= 10:
                 moveTime = 0
-                movingRight = False
+                if raccoon_Ypos == 880:
+                    movingRight = False
 
         # Jump handling (quick at first then decelerate)
         if flyUp:
@@ -107,6 +107,7 @@ def game(pygame, font, screen, screen_rect, userName, saveId, gameData):
             if (raccoon_Ypos + gravity * flyTime / 500) > 880:
                 raccoon_Ypos = 880
                 allowMoves = True
+                moveTime = 10
             else:
                 raccoon_Ypos += gravity * flyTime / 500
             flyTime += 1
