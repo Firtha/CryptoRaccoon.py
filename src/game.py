@@ -176,7 +176,6 @@ def game(pygame, font, screen, screen_rect, userName, saveId, gameData):
         # draw players stats
         utils.draw_text('User : ' + userName, fontScore, (255, 255, 255), screen, 15, 10, False)  # Draw the user name
         utils.draw_text('Score (BTC) : %.4f' % userScore, fontScore, (255, 255, 255), screen, 15, 30, False)  # Draw the score declaration
-        utils.draw_text('Lives : %d' % game.player.lives, font, (255, 255, 255), screen, 625, 10, False)  # Draw the score
 
         #draw trucks
         game.all_trucks.draw(screen)
@@ -190,7 +189,7 @@ def game(pygame, font, screen, screen_rect, userName, saveId, gameData):
             game_over(pygame, font, screen, screen_rect, userName)
 
         for x in range(game.player.lives):
-            screen.blit(heartLives, (200 + 70 * x, 10))
+            screen.blit(heartLives, (650 + 70 * x, 10))
 
         userScore += 0.00001
         pygame.display.flip()
@@ -260,23 +259,18 @@ def game_over(pygame, font, screen, screen_rect, userName):
         # Define mouse click to false
         mx, my = pygame.mouse.get_pos()  # Init mouse cursor position for the menu
         utils.init_game_background(pygame, screen)  # Start the init_game_background function
-        utils.draw_text('PAUSE', font, (255, 255, 255),
-                        screen, 300, 50, True)  # Draw the text menu
-        button_1 = pygame.Rect(250, 200, 400,
-                               100)  # Init button_1 rectangleparameters -> Rect(left, top, width, height)
-        button_1.centerx = screen_rect.centerx  # The button x-center value is set to be equal to the screen x-center value
-        button_2 = pygame.Rect(250, 400, 400,
-                               100)  # Init button_2 rectangleparameters -> Rect(left, top, width, height)
+
+        gameover = pygame.image.load('../img/wasted.png')
+        screen.blit(gameover, (285, 150))
+
+        button_2 = pygame.Rect(250, 400, 400, 100)  # Init button_2 rectangleparameters -> Rect(left, top, width, height)
         button_2.centerx = screen_rect.centerx  # The button x-center value is set to be equal to the screen x-center value
-        button_3 = pygame.Rect(250, 600, 400,
-                               100)  # Init button_3 rectangleparameters -> Rect(left, top, width, height)
+        button_3 = pygame.Rect(250, 600, 400, 100)  # Init button_3 rectangleparameters -> Rect(left, top, width, height)
         button_3.centerx = screen_rect.centerx  # The button x-center value is set to be equal to the screen x-center value
 
-        pygame.draw.rect(screen, (255, 255, 255), button_1)  # Draw the menubutton_1
-        pygame.draw.rect(screen, (255, 255, 255), button_2)  # Draw the menubutton_2
-        pygame.draw.rect(screen, (255, 255, 255), button_3)  # Draw the menubutton_3
+        pygame.draw.rect(screen, (205, 205, 205), button_2)  # Draw the menubutton_2
+        pygame.draw.rect(screen, (205, 205, 205), button_3)  # Draw the menubutton_3
 
-        utils.draw_text('RESUME', font, (0, 0, 0), screen, 300, 227, True)
         utils.draw_text('SAVE AND QUIT', font, (0, 0, 0), screen, 300, 427, True)
         utils.draw_text('QUIT', font, (0, 0, 0), screen, 300, 627, True)
 
@@ -293,10 +287,6 @@ def game_over(pygame, font, screen, screen_rect, userName):
                 if event.button == 1:
                     click = True
 
-        if button_1.collidepoint((mx, my)):
-            if click:
-                print("RESUME button clicked")
-                return 0
         if button_2.collidepoint((mx, my)):
             if click:
                 print("SAVE&QUIT button clicked")
