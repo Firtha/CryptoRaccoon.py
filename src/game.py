@@ -131,8 +131,6 @@ def game(pygame, font, screen, screen_rect, userName, saveId, gameData):
 
             elif event.type == pygame.KEYUP:
                 game.pressed[event.key] = False
-                #if event.key == pygame.K_UP:
-                #    game.player.rect.y = 880
         
         # Gradual moves handling
         if movingLeft:
