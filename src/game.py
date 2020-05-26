@@ -2,7 +2,7 @@ import sys
 import pygame
 import utils
 import saves_manager
-
+from pygame.constants import *
 from truck import Truck
 
 # class qui représente le jeu
@@ -25,7 +25,7 @@ class Game:
 # class du joueur
 class Player(pygame.sprite.Sprite):
 
-    def __init__(self, game, life):
+    def __init__(self, game):
         super().__init__()
         self.game = game
         self.lives = 3
@@ -111,7 +111,7 @@ def game(pygame, font, screen, screen_rect, userName, saveId, gameData):
                 if event.key == pygame.K_ESCAPE:
                     targetOptions = game_menu(pygame, font, screen, screen_rect, userName)
                     if targetOptions == 1:
-                        saves_manager.putSavedGame(userName, userScore, saveId)
+                        saves_manager.putSavedGame(userName, userScore, saveId, game.player.lives)
                     if targetOptions == 1 or targetOptions == -1:
                         running = False
                 
@@ -138,7 +138,7 @@ def game(pygame, font, screen, screen_rect, userName, saveId, gameData):
             moveTime += 1
             if moveTime >= 10:
                 moveTime = 0
-                if raccoon_Ypos == 880:
+                if game.player.rect.y == 880:
                     movingLeft = False
 
         if movingRight:
@@ -146,7 +146,7 @@ def game(pygame, font, screen, screen_rect, userName, saveId, gameData):
             moveTime += 1
             if moveTime >= 10:
                 moveTime = 0
-                if raccoon_Ypos == 880:
+                if game.player.rect.y == 880:
                     movingRight = False
 
         # Jump handling (quick at first then decelerate)
@@ -176,7 +176,7 @@ def game(pygame, font, screen, screen_rect, userName, saveId, gameData):
         # draw players stats
         utils.draw_text('User : ' + userName, fontScore, (255, 255, 255), screen, 15, 10, False)  # Draw the user name
         utils.draw_text('Score (BTC) : %.4f' % userScore, fontScore, (255, 255, 255), screen, 15, 30, False)  # Draw the score declaration
-        utils.draw_text('Life : %d' % game.player.health, font, (255, 255, 255), screen, 625, 10, False)  # Draw the score
+        utils.draw_text('Lives : %d' % game.player.lives, font, (255, 255, 255), screen, 625, 10, False)  # Draw the score
 
         #draw trucks
         game.all_trucks.draw(screen)
