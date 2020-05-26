@@ -25,11 +25,11 @@ class Game:
 # class du joueur
 class Player(pygame.sprite.Sprite):
 
-    def __init__(self, game):
+    def __init__(self, game, life):
         super().__init__()
         self.game = game
-        self.health = 100
-        self.max_health = 100
+        self.lives = 3
+        self.lives = 3
         self.velocity = 20
         self.jump_velocity = 40
         self.image = pygame.image.load("../img/raccoon.png").convert_alpha()
@@ -43,7 +43,7 @@ class Player(pygame.sprite.Sprite):
             self.rect.x += self.velocity
 
     def damaged(self, amount):
-        self.health -= amount
+        self.lives -= amount
 
     def move_left(self):
         self.rect.x -= self.velocity
@@ -56,14 +56,33 @@ class Player(pygame.sprite.Sprite):
 def game(pygame, font, screen, screen_rect, userName, saveId, gameData):
 
     game = Game()
+    
+    # Fixed value for gravity
+    gravity = 250
+
+    # Fly time counting var
+    flyTime = 0
+
+    # Character state management vars
+    allowMoves = True
+    flyUp = False
+
+    movingLeft = False
+    movingRight = False
+    moveTime = 0
 
     # If saveId = -1 then it means it's a new game
     if saveId == -1:
         saveId = saves_manager.getNextId(userName)
         userScore = 0.0
+        game.player.lives = 3
     else:
         userScore = float(gameData[2])
+        game.player.lives = int(gameData[3])
 
+    heartLives = pygame.image.load("../img/heart.png").convert_alpha()
+    heartLives = pygame.transform.scale(heartLives, (60, 60))
+        
     print("Game ID is ", saveId)
     print("Starting score is ", userScore)
     fontScore = pygame.font.SysFont(None, 24)
@@ -76,12 +95,12 @@ def game(pygame, font, screen, screen_rect, userName, saveId, gameData):
         for truck in game.all_trucks:
             truck.drive()
 
-        if game.pressed.get(pygame.K_RIGHT) and game.player.rect.x + game.player.rect.width < screen.get_width() :
-            game.player.move_right()
-        elif game.pressed.get(pygame.K_LEFT) and game.player.rect.x > 0:
-            game.player.move_left()
-        if game.pressed.get(pygame.K_UP) and game.player.rect.y > 500 :
-            game.player.jump()
+        #if game.pressed.get(pygame.K_RIGHT) and game.player.rect.x + game.player.rect.width < screen.get_width() :
+        #    game.player.move_right()
+        #elif game.pressed.get(pygame.K_LEFT) and game.player.rect.x > 0:
+        #    game.player.move_left()
+        #if game.pressed.get(pygame.K_UP) and game.player.rect.y > 500 :
+        #    game.player.jump()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -95,11 +114,58 @@ def game(pygame, font, screen, screen_rect, userName, saveId, gameData):
                         saves_manager.putSavedGame(userName, userScore, saveId)
                     if targetOptions == 1 or targetOptions == -1:
                         running = False
+                
+                # Jumping will block any other action and will trigger animation
+                if event.key == K_UP and allowMoves:
+                    allowMoves = False
+                    flyUp = True
+                    flyTime = 0
+                if event.key == K_RIGHT and allowMoves and not movingLeft and not movingRight:
+                    movingRight = True
+                    moveTime = 0
+                if event.key == K_LEFT and allowMoves and not movingLeft and not movingRight:
+                    movingLeft = True
+                    moveTime = 0
 
             elif event.type == pygame.KEYUP:
                 game.pressed[event.key] = False
-                if event.key == pygame.K_UP:
-                    game.player.rect.y = 880
+                #if event.key == pygame.K_UP:
+                #    game.player.rect.y = 880
+        
+        # Gradual moves handling
+        if movingLeft:
+            game.player.rect.x += -7
+            moveTime += 1
+            if moveTime >= 10:
+                moveTime = 0
+                if raccoon_Ypos == 880:
+                    movingLeft = False
+
+        if movingRight:
+            game.player.rect.x += 7
+            moveTime += 1
+            if moveTime >= 10:
+                moveTime = 0
+                if raccoon_Ypos == 880:
+                    movingRight = False
+
+        # Jump handling (quick at first then decelerate)
+        if flyUp:
+            game.player.rect.y -= gravity * (40 - flyTime) / 500
+            flyTime += 1
+            if flyTime >= 40:
+                flyUp = False
+                flyTime = 0
+
+        # Gravity handling (slow at first then accelerate)
+        if not allowMoves and not flyUp:
+            if (game.player.rect.y + gravity * flyTime / 500) > 880:
+                game.player.rect.y = 880
+                allowMoves = True
+                moveTime = 10
+            else:
+                game.player.rect.y += gravity * flyTime / 500
+            flyTime += 1
 
         # draw the background
         utils.init_game_background(pygame, screen)
@@ -117,12 +183,14 @@ def game(pygame, font, screen, screen_rect, userName, saveId, gameData):
 
         #Collision check, if collision player lose 25 of health
         if game.check_collision(game.player, game.all_trucks) :
-            game.player.damaged(25)
+            game.player.damaged(1)
 
         # GAme over when the health is = or below 0
-        if game.player.health <= 0:
+        if game.player.lives <= 0:
             game_over(pygame, font, screen, screen_rect, userName)
 
+        for x in range(game.player.lives):
+            screen.blit(heartLives, (200 + 70 * x, 10))
 
         userScore += 0.00001
         pygame.display.flip()
