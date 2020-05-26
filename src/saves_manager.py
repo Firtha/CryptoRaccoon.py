@@ -140,6 +140,8 @@ def putSavedGame(userName, userScore, saveId, userLife):
                     save['score'] = '%.4f' % userScore
                     save['date'] = datetime.today().strftime('%Y-%m-%d-%H:%M:%S')
                     save['lives'] = userLife
+                    if userLife == 0:
+                        save['game_over'] = True
 
     # If we need to create a new saved game
     if not saveExist:
@@ -150,12 +152,15 @@ def putSavedGame(userName, userScore, saveId, userLife):
             })
         for player in data['players']:
             if player['name'] == userName:
+                state = False
+                if userLife == 0:
+                    state = True
                 player['saves'].append({
                     'id': saveId,
                     'date': datetime.today().strftime('%Y-%m-%d-%H:%M:%S'),
                     'score': '%.4f' % userScore,
                     'lives': userLife,
-                    'game_over': False
+                    'game_over': state
                 })
 
     with open('../Saves/saves.json', 'w') as outfile:

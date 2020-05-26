@@ -126,6 +126,8 @@ def game(pygame, font, screen, screen_rect, userName, saveId, gameData):
                 if event.key == K_LEFT and allowMoves and not movingLeft and not movingRight:
                     movingLeft = True
                     moveTime = 0
+                if event.key == K_SPACE:
+                    game.spawn_truck()
 
             elif event.type == pygame.KEYUP:
                 game.pressed[event.key] = False
@@ -187,6 +189,8 @@ def game(pygame, font, screen, screen_rect, userName, saveId, gameData):
         # GAme over when the health is = or below 0
         if game.player.lives <= 0:
             game_over(pygame, font, screen, screen_rect, userName)
+            saves_manager.putSavedGame(userName, userScore, saveId, game.player.lives)
+            running = False
 
         for x in range(game.player.lives):
             screen.blit(heartLives, (650 + 70 * x, 10))
@@ -263,16 +267,12 @@ def game_over(pygame, font, screen, screen_rect, userName):
         gameover = pygame.image.load('../img/wasted.png')
         screen.blit(gameover, (285, 150))
 
-        button_2 = pygame.Rect(250, 400, 400, 100)  # Init button_2 rectangleparameters -> Rect(left, top, width, height)
-        button_2.centerx = screen_rect.centerx  # The button x-center value is set to be equal to the screen x-center value
-        button_3 = pygame.Rect(250, 600, 400, 100)  # Init button_3 rectangleparameters -> Rect(left, top, width, height)
-        button_3.centerx = screen_rect.centerx  # The button x-center value is set to be equal to the screen x-center value
+        button_1 = pygame.Rect(250, 400, 400, 100)  # Init button_1 rectangleparameters -> Rect(left, top, width, height)
+        button_1.centerx = screen_rect.centerx  # The button x-center value is set to be equal to the screen x-center value
 
-        pygame.draw.rect(screen, (205, 205, 205), button_2)  # Draw the menubutton_2
-        pygame.draw.rect(screen, (205, 205, 205), button_3)  # Draw the menubutton_3
+        pygame.draw.rect(screen, (205, 205, 205), button_1)  # Draw the menubutton_1
 
-        utils.draw_text('SAVE AND QUIT', font, (0, 0, 0), screen, 300, 427, True)
-        utils.draw_text('QUIT', font, (0, 0, 0), screen, 300, 627, True)
+        utils.draw_text('QUIT', font, (0, 0, 0), screen, 300, 427, True)
 
         # Event loop that will check if any input event occurs
         for event in pygame.event.get():
@@ -281,19 +281,15 @@ def game_over(pygame, font, screen, screen_rect, userName):
                 sys.exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    print("Escape has been pushed -> RESUME")
-                    return 0
+                    print("Escape has been pushed -> QUIT")
+                    running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
                     click = True
 
-        if button_2.collidepoint((mx, my)):
-            if click:
-                print("SAVE&QUIT button clicked")
-                return 1
-        if button_3.collidepoint((mx, my)):
+        if button_1.collidepoint((mx, my)):
             if click:
                 print("QUIT button clicked")
-                return -1
+                running = False
 
         pygame.display.flip()  # Refresh screen
