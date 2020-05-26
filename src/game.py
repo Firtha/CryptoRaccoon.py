@@ -193,6 +193,11 @@ def game(pygame, font, screen, screen_rect, userName, saveId, gameData):
         for x in range(game.player.lives):
             screen.blit(heartLives, (650 + 70 * x, 10))
 
+        if game.player.rect.x <= 0:
+            game.player.rect.x = 0
+        elif game.player.rect.x >= 660:
+            game.player.rect.x = 660
+
         userScore += 0.00001
         pygame.display.flip()
 
