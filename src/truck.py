@@ -9,7 +9,7 @@ class Truck(pygame.sprite.Sprite):
         self.image = pygame.image.load('../img/garbage-truck.png')
         self.image = pygame.transform.scale(self.image,(280,280))
         self.rect = self.image.get_rect()
-        self.rect.x = 630
+        self.rect.x = 950
         self.rect.y = 750
         self.velocity = 3
     
@@ -18,6 +18,8 @@ class Truck(pygame.sprite.Sprite):
             self.rect.x -= self.velocity
         else:
             self.explode()
+            self.game.spawn_truck()
+            
     
     def explode(self):
         self.game.all_trucks.remove(self)

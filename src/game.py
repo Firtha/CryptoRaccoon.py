@@ -116,17 +116,17 @@ def game(pygame, font, screen, screen_rect, userName, saveId, gameData):
                         running = False
                 
                 # Jumping will block any other action and will trigger animation
-                if event.key == K_UP and allowMoves:
+                if event.key == pygame.K_UP and allowMoves:
                     allowMoves = False
                     flyUp = True
                     flyTime = 0
-                if event.key == K_RIGHT and allowMoves and not movingLeft and not movingRight:
+                if event.key == pygame.K_RIGHT and allowMoves and not movingLeft and not movingRight:
                     movingRight = True
                     moveTime = 0
-                if event.key == K_LEFT and allowMoves and not movingLeft and not movingRight:
+                if event.key == pygame.K_LEFT and allowMoves and not movingLeft and not movingRight:
                     movingLeft = True
                     moveTime = 0
-                if event.key == K_SPACE:
+                if event.key == pygame.K_SPACE:
                     game.spawn_truck()
 
             elif event.type == pygame.KEYUP:
